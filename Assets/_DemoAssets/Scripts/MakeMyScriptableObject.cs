@@ -2,6 +2,9 @@
 using System.Collections;
 using UnityEditor;
 
+/// <summary>
+/// Make my scriptable object.
+/// </summary>
 public class MakeMyScriptableObject : MonoBehaviour {
 	[MenuItem("Assets/Create/Spawned Points Scriptable Object")]
 	public static void CreateSpawnedPointsScriptableObject() {

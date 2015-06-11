@@ -2,7 +2,10 @@
 using System.Collections;
 
 public class FloorScroller : MonoBehaviour {
-	
+
+	/// <summary>
+	/// The scroll speed.
+	/// </summary>
 	public float scrollSpeed = 2.0f;
 
 	private Renderer floorRenderer = null;

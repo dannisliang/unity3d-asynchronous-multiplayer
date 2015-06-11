@@ -11,6 +11,9 @@ public class Scroller : MonoBehaviour {
 	private float scrollTimeTotal = 0.0f;
 
 	// Use this for initialization
+	/// <summary>
+	/// Start this instance.
+	/// </summary>
 	void Start () {
 		scrollSpeed = ScrollSpeedMin;
 		scrollTimeTotal = 0.0f;
@@ -24,10 +27,16 @@ public class Scroller : MonoBehaviour {
 		transform.Translate (Vector3.right * Time.deltaTime * scrollSpeed);
 	}
 
+	/// <summary>
+	/// Raises the dragon killed event.
+	/// </summary>
 	void OnDragonKilled() {
 		Reset ();
 	}
 
+	/// <summary>
+	/// Reset this instance.
+	/// </summary>
 	void Reset() {
 		scrollSpeed = ScrollSpeedMin;
 		scrollTimeTotal = 0.0f;

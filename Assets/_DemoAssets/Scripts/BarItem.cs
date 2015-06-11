@@ -13,6 +13,10 @@ public class BarItem : MonoBehaviour {
 	
 	}
 
+	/// <summary>
+	/// Raises the trigger enter event.
+	/// </summary>
+	/// <param name="other">Other.</param>
 	void OnTriggerEnter(Collider other) {
 		GameManager.Instance.OnDragonCrashed ();
 	}
