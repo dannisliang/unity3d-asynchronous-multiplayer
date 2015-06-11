@@ -1,18 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameManager : ScriptableObject {
-
-	public static GameManager GetInstance() {
-		return CreateInstance<GameManager> ();
-	}
+public class GameManager : MonoBehaviour {
 
 	public GameObject dragon;
 	public int playerScore = 0;
 	public bool isPlayerDied = false;
+	
+	private static GameManager _instance = null;
+	public static GameManager Instance {
+		get {
+			if (_instance == null)
+				_instance = GameObject.FindObjectOfType<GameManager>();
+			return _instance;
+		}
+	}
 
 	// Use this for initialization
 	void Start () {
+		// FIXME weak code
 		dragon.GetComponent<Scroller> ().enabled = false;
 		dragon.GetComponentInChildren<Rigidbody> ().useGravity = false;
 		dragon.GetComponentInChildren<DragonController> ().enabled = false;
@@ -31,6 +37,7 @@ public class GameManager : ScriptableObject {
 	}
 
 	public void OnTapToPlay() {
+		// FIXME weak code
 		dragon.GetComponent<Scroller> ().enabled = true;
 		dragon.GetComponentInChildren<Rigidbody> ().useGravity = true;
 		dragon.GetComponentInChildren<DragonController> ().enabled = true;
@@ -38,7 +45,6 @@ public class GameManager : ScriptableObject {
 
 	public void OnDragonGetBall() {
 		playerScore += 1;
-		Debug.Log ("GameManager::OnDragonGetBall " + playerScore);
 	}
 
 	public void OnDragonCrashed() {

@@ -14,6 +14,6 @@ public class BallItem : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		GameManager.GetInstance ().OnDragonGetBall ();
+		GameManager.Instance.OnDragonGetBall ();
 	}
 }

@@ -14,6 +14,6 @@ public class BarItem : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		GameManager.GetInstance ().OnDragonCrashed ();
+		GameManager.Instance.OnDragonCrashed ();
 	}
 }
