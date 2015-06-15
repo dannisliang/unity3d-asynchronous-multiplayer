@@ -6,17 +6,25 @@ public class GameManager : MonoBehaviour {
 	/// <summary>
 	/// The dragon.
 	/// </summary>
-	public GameObject dragon;
+	public GameObject dragon = null;
 
 	/// <summary>
-	/// The player score.
+	/// The player data.
 	/// </summary>
-	public int playerScore = 0;
+	private PlayerData playerData = null;
 
 	/// <summary>
 	/// The is player died.
 	/// </summary>
-	public bool isPlayerDied = false;
+	private bool isPlayerDied = false;
+
+	private GameObject[] friendDragons;
+
+	public PlayerData GetPlayerData {
+		get {
+			return playerData;
+		}
+	}
 
 	/// <summary>
 	/// The _instance.
@@ -35,12 +43,15 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	void Awake() {
+		// create memory for saving player data
+		playerData = new PlayerData ();
+
+		//TODO create slots for storing friend's dragons (if there's any)
+	}
+
 	// Use this for initialization
 	void Start () {
-		// FIXME weak code
-		dragon.GetComponent<Scroller> ().enabled = false;
-		dragon.GetComponentInChildren<Rigidbody> ().useGravity = false;
-		dragon.GetComponentInChildren<DragonController> ().enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -56,6 +67,11 @@ public class GameManager : MonoBehaviour {
 	/// Kills the dragon.
 	/// </summary>
 	void KillDragon() {
+		if (dragon != null) {
+			dragon.GetComponent<Scroller> ().enabled = false;
+			dragon.GetComponentInChildren<DragonController> ().enabled = false;
+			dragon.GetComponentInChildren<Rigidbody> ().isKinematic = true;
+		}
 	}
 
 	/// <summary>
@@ -63,23 +79,33 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	public void OnTapToPlay() {
 		// FIXME weak code
-		dragon.GetComponent<Scroller> ().enabled = true;
-		dragon.GetComponentInChildren<Rigidbody> ().useGravity = true;
-		dragon.GetComponentInChildren<DragonController> ().enabled = true;
+		if (dragon != null) {
+			dragon.GetComponent<Scroller> ().OnTapToPlay ();
+			dragon.GetComponentInChildren<DragonController> ().OnTapToPlay ();
+			dragon.GetComponentInChildren<Rigidbody> ().useGravity = true;
+		}
 	}
 
 	/// <summary>
 	/// Raises the dragon get ball event.
 	/// </summary>
-	public void OnDragonGetBall() {
-		playerScore += 1;
+	public void OnDragonGetBall(bool isBonusBall) {
+		if (isBonusBall) {
+			playerData.Score += 10;
+			dragon.GetComponent<Scroller> ().OnGetBonusBall();
+		} else {
+			playerData.Score += 1;
+		}
 	}
 
 	/// <summary>
 	/// Raises the dragon crashed event.
 	/// </summary>
 	public void OnDragonCrashed() {
+		// Get player's replay data
+		DragonController controller = dragon.GetComponent<DragonController> ();
+		playerData.ReplayData = controller.ReplayData;
+
 		isPlayerDied = true;
-		Debug.Log ("GameManager::OnDragonCrashed");
 	}
 }

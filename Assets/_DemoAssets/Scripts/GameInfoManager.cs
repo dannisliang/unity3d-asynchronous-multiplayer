@@ -13,7 +13,7 @@ public class GameInfoManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (scoreText != null) {
-			scoreText.text = "Score " + GameManager.Instance.playerScore;
+			scoreText.text = "Score " + GameManager.Instance.GetPlayerData.Score;
 		}
 	}
 }
