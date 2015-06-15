@@ -7,6 +7,9 @@ public class GameManager : MonoBehaviour {
 	/// The dragon.
 	/// </summary>
 	public GameObject dragon = null;
+	public GameObject friendDragons = null;
+
+	private PlayerData[] friendPlayerDatas = new PlayerData[5];
 
 	/// <summary>
 	/// The player data.
@@ -17,8 +20,6 @@ public class GameManager : MonoBehaviour {
 	/// The is player died.
 	/// </summary>
 	private bool isPlayerDied = false;
-
-	private GameObject[] friendDragons;
 
 	public PlayerData GetPlayerData {
 		get {
@@ -84,6 +85,10 @@ public class GameManager : MonoBehaviour {
 			dragon.GetComponentInChildren<DragonController> ().OnTapToPlay ();
 			dragon.GetComponentInChildren<Rigidbody> ().useGravity = true;
 		}
+
+		if (friendDragons != null) {
+			friendDragons.GetComponent<FriendDragonsManager>().OnTapToPlay();
+		}
 	}
 
 	/// <summary>
@@ -104,8 +109,39 @@ public class GameManager : MonoBehaviour {
 	public void OnDragonCrashed() {
 		// Get player's replay data
 		DragonController controller = dragon.GetComponent<DragonController> ();
-		playerData.ReplayData = controller.ReplayData;
+		playerData.JumpData = controller.JumpData;
+		Debug.Log ("JumpData = " + playerData.JumpData);
+
+		Scroller scroller = dragon.GetComponent<Scroller> ();
+		playerData.BonusData = scroller.BonusData;
+		Debug.Log ("BonusData = " + scroller.BonusData);
 
 		isPlayerDied = true;
 	}
+
+	/// <summary>
+	/// Updates the player data to database.
+	/// </summary>
+	/// <returns><c>true</c>, if player data to database was updated, <c>false</c> otherwise.</returns>
+	public bool UpdatePlayerDataToDatabase() {
+		return true;
+	}
+
+	/// <summary>
+	/// Loads the player data from database.
+	/// </summary>
+	/// <returns><c>true</c>, if player data from database was loaded, <c>false</c> otherwise.</returns>
+	public bool LoadPlayerDataFromDatabase() {
+		return true;
+	}
+
+	/// <summary>
+	/// Loads the friend player data from database.
+	/// </summary>
+	/// <returns><c>true</c>, if friend player data from database was loaded, <c>false</c> otherwise.</returns>
+	public bool LoadFriendPlayerDataFromDatabase() {
+		return true;
+	}
+
+
 }

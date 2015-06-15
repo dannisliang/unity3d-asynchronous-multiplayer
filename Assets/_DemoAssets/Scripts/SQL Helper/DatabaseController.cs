@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -63,7 +63,7 @@ public class DatabaseController : MonoBehaviour {
 			+ "&new_fb_name=" + playerData.FacebookName
 				+ "&new_fb_friends=" + playerData.FacebookFriends
 				+ "&new_score=" + playerData.Score
-				+ "&new_replay_data=" + playerData.ReplayData;
+				+ "&new_replay_data=" + playerData.JumpData;
 		
 		Debug.Log("requestURL = " + requestURL);
 		
@@ -85,7 +85,7 @@ public class DatabaseController : MonoBehaviour {
 			+ "&new_fb_name=" + playerData.FacebookName
 				+ "&new_fb_friends=" + playerData.FacebookFriends
 				+ "&new_score=" + playerData.Score
-				+ "&new_replay_data=" + playerData.ReplayData;
+				+ "&new_replay_data=" + playerData.JumpData;
 		
 		Debug.Log("requestURL = " + requestURL);
 		

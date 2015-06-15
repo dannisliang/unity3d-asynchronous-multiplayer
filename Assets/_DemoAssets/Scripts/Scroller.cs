@@ -2,45 +2,63 @@
 using System.Collections;
 
 public class Scroller : MonoBehaviour {
-
-	public float ScrollSpeedMin = 1.0f;
-	public float ScrollSpeedMax = 4.0f;
-	public float ScrollTimeMax = 600.0f;
-	public float ScrollSpeedBonusMax = 5.0f;
-
-	private float scrollSpeed = 1.0f;
-	private float scrollTimeTotal = 0.0f;
+	
+	public float ScrollSpeedNormal = 2.0f;
+	public float ScrollSpeedBonusMax = 3.0f;
+	
+	private float scrollSpeed = 2.0f;
 	private float scrollSpeedBonus = 1.0f;
+	private float scrollTimeTotal = 0.0f;
+
+	private string bonusData = "";
+	private bool gotBonusBall = false;
+
+	public string BonusData {
+		get {
+			return bonusData;
+		}
+	}
+
+	void Awake() {
+		enabled = false;
+		scrollTimeTotal = 0.0f;
+		gotBonusBall = false;
+	}
 
 	// Use this for initialization
 	/// <summary>
 	/// Start this instance.
 	/// </summary>
 	void Start () {
-		scrollSpeed = ScrollSpeedMin;
-		scrollTimeTotal = 0.0f;
-		enabled = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		scrollTimeTotal += Time.deltaTime;
-		if (scrollSpeedBonus > 1.0f) {
-			scrollSpeedBonus = Mathf.Lerp (scrollSpeedBonus, 1.0f, Time.deltaTime);
-			Debug.Log ("scrollSpeedBonus = " + scrollSpeedBonus);
+
+		if (gotBonusBall) {
+			gotBonusBall = false;
+			scrollSpeedBonus = ScrollSpeedBonusMax;
+
+			bonusData += scrollTimeTotal + "|";
 		}
 
-		scrollSpeed = scrollSpeedBonus * Mathf.Lerp (ScrollSpeedMin, ScrollSpeedMax, scrollTimeTotal/ScrollTimeMax);
+		if (scrollSpeedBonus > 1.0f) {
+			scrollSpeedBonus = Mathf.Lerp (scrollSpeedBonus, 1.0f, Time.deltaTime);
+		}
+
+		scrollSpeed = scrollSpeedBonus * ScrollSpeedNormal;
 
 		transform.Translate (Vector3.right * Time.deltaTime * scrollSpeed);
 	}
 
 	public void OnTapToPlay() {
 		enabled = true;
+		scrollTimeTotal = 0.0f;
 	}
 
 	public void OnGetBonusBall() {
-		scrollSpeedBonus = ScrollSpeedBonusMax;
+		gotBonusBall = true;
 	}
 
 	/// <summary>
@@ -53,8 +71,9 @@ public class Scroller : MonoBehaviour {
 	/// <summary>
 	/// Reset this instance.
 	/// </summary>
-	public void Reset() {
-		scrollSpeed = ScrollSpeedMin;
+	private void Reset() {
+		enabled = false;
 		scrollTimeTotal = 0.0f;
+		gotBonusBall = false;
 	}
 }

@@ -7,7 +7,8 @@ public class PlayerData {
 	private string	_fbName = "";
 	private string	_fbFriends = "";
 	private int		_score = 0;
-	private string	_replayData = "";
+	private string	_jumpData = "";
+	private string	_bonusData = "";
 
 	public string FacebookID {
 		get {
@@ -45,12 +46,21 @@ public class PlayerData {
 		}
 	}
 	
-	public string ReplayData {
+	public string JumpData {
 		get {
-			return _replayData;
+			return _jumpData;
 		}
 		set {
-			_replayData = value;
+			_jumpData = value;
+		}
+	}
+
+	public string BonusData {
+		get {
+			return _bonusData;
+		}
+		set {
+			_bonusData = value;
 		}
 	}
 
