@@ -1,16 +1,16 @@
+using System;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class DatabaseController : MonoBehaviour {
-	public string insertQueryURL = "http://localhost/phpmyadmin/insert_player_data.php?";
-	public string updateQueryURL = "http://localhost/phpmyadmin/update_player_data.php?";
-	public string deleteQueryURL = "http://localhost/phpmyadmin/delete_player_data.php?";
-	public string selectQueryURL = "http://localhost/phpmyadmin/select_player_data.php";
-	
-	public string secretKey = "unity_test_db_key";
-	public PlayerData[] top10Players;
-	public Text textObject;
+	public string insertQueryURL = "http://localhost/phpmyadmin/unity_test/insert_player_data.php?";
+	public string updateQueryURL = "http://localhost/phpmyadmin/unity_test/update_player_data.php?";
+	public string deleteQueryURL = "http://localhost/phpmyadmin/unity_test/delete_player_data.php?";
+	public string selectQueryURL = "http://localhost/phpmyadmin/unity_test/load_player_data.php";
+
+	private List<PlayerData> topPlayers = new List<PlayerData> ();
 	
 	private static DatabaseController _instance = null;
 	
@@ -24,6 +24,15 @@ public class DatabaseController : MonoBehaviour {
 				_instance = GameObject.FindObjectOfType<DatabaseController>();
 			return _instance;
 		}
+	}
+
+	public List<PlayerData> TopPlayers {
+		get {
+			return topPlayers;
+		}
+	}
+
+	void Awake() {
 	}
 	
 	// Use this for initialization
@@ -59,11 +68,12 @@ public class DatabaseController : MonoBehaviour {
 	
 	IEnumerator InsertPlayerDataRoutine(PlayerData playerData)
 	{
-		string requestURL = insertQueryURL + "new_fb_id=" + playerData.FacebookID
-			+ "&new_fb_name=" + playerData.FacebookName
-				+ "&new_fb_friends=" + playerData.FacebookFriends
-				+ "&new_score=" + playerData.Score
-				+ "&new_replay_data=" + playerData.JumpData;
+		string requestURL = insertQueryURL + "new_fb_id=" + WWW.EscapeURL(playerData.FacebookID)
+			+ "&new_fb_name=" + WWW.EscapeURL(playerData.FacebookName)
+			+ "&new_fb_friends=" + WWW.EscapeURL(playerData.FacebookFriends)
+			+ "&new_score=" + playerData.Score
+			+ "&new_jump_data=" + WWW.EscapeURL(playerData.JumpData)
+			+ "&new_bonus_data=" + WWW.EscapeURL(playerData.BonusData);
 		
 		Debug.Log("requestURL = " + requestURL);
 		
@@ -75,17 +85,21 @@ public class DatabaseController : MonoBehaviour {
 		if (webRequest.error != null) {
 			Debug.Log ("Save request error: " + webRequest.error);
 		} else {
-			Debug.Log(webRequest.ToString());
+			Debug.Log (webRequest.text);
+			Debug.Log("InsertPlayerDataRoutine successful!");
 		}
 	}
 	
 	IEnumerator UpdatePlayerDataRoutine(PlayerData playerData)
 	{
-		string requestURL = updateQueryURL + "fb_id=" + playerData.FacebookID
-			+ "&new_fb_name=" + playerData.FacebookName
-				+ "&new_fb_friends=" + playerData.FacebookFriends
-				+ "&new_score=" + playerData.Score
-				+ "&new_replay_data=" + playerData.JumpData;
+		playerData.LogAllInfos ();
+
+		string requestURL = updateQueryURL + "fb_id=" + WWW.EscapeURL(playerData.FacebookID)
+			+ "&new_fb_name=" + WWW.EscapeURL(playerData.FacebookName)
+			+ "&new_fb_friends=" + WWW.EscapeURL(playerData.FacebookFriends)
+			+ "&new_score=" + playerData.Score
+			+ "&new_jump_data=" + WWW.EscapeURL(playerData.JumpData)
+			+ "&new_bonus_data=" + WWW.EscapeURL(playerData.BonusData);
 		
 		Debug.Log("requestURL = " + requestURL);
 		
@@ -97,13 +111,13 @@ public class DatabaseController : MonoBehaviour {
 		if (webRequest.error != null) {
 			Debug.Log ("Save request error: " + webRequest.error);
 		} else {
-			Debug.Log(webRequest.ToString());
+			Debug.Log("UpdatePlayerDataRoutine successful!");
 		}
 	}
 	
 	IEnumerator DeletePlayerDataRoutine(PlayerData playerData)
 	{
-		string requestURL = deleteQueryURL + "new_fb_id=" + playerData.FacebookID;
+		string requestURL = deleteQueryURL + "new_fb_id=" + WWW.EscapeURL(playerData.FacebookID);
 		
 		Debug.Log("requestURL = " + requestURL);
 		
@@ -115,14 +129,12 @@ public class DatabaseController : MonoBehaviour {
 		if (webRequest.error != null) {
 			Debug.Log ("Save request error: " + webRequest.error);
 		} else {
-			Debug.Log(webRequest.ToString());
+			Debug.Log(webRequest.text);
 		}
 	}
 	
 	IEnumerator LoadPlayerDataRoutine()
 	{
-		textObject.text = "Loading Scores ...";
-		
 		WWW webRequest = new WWW(selectQueryURL);
 		
 		yield return webRequest;
@@ -133,9 +145,7 @@ public class DatabaseController : MonoBehaviour {
 		}
 		else
 		{
-			Debug.Log(webRequest.text);
-			//display score on GUI
-			textObject.text = webRequest.text;
+			DeserializePlayerDatas(webRequest.text);
 		}
 	}
 	
@@ -157,5 +167,38 @@ public class DatabaseController : MonoBehaviour {
 		}
 		
 		return hashString.PadLeft(32, '0');
+	}
+
+	private bool DeserializePlayerDatas(string returnedText) {
+		char[] rowDelimiters = new char[] { '\n' };
+		string[] rows = returnedText.Split (rowDelimiters, StringSplitOptions.RemoveEmptyEntries);
+
+		if (rows != null && rows.Length > 0) {
+			char[] colDelimiters = new char[] { ';' };
+
+			for (int i = 0; i < rows.Length; i++) {
+				string[] cols = rows[i].Split(colDelimiters, StringSplitOptions.RemoveEmptyEntries);
+
+				if (cols != null && cols.Length > 5) {
+					PlayerData pData = new PlayerData();
+
+					pData.FacebookID = cols[0];
+					pData.FacebookName = cols[1];
+					pData.FacebookFriends = cols[2];
+					pData.Score = int.Parse(cols[3]);
+					pData.JumpData = cols[4];
+					pData.BonusData = cols[5];
+
+					//Debug.Log (pData.FacebookID + "\t" + pData.FacebookName + "\t" + pData.FacebookFriends + "\t" + pData.Score + "\t" + pData.JumpData + "\t" + pData.BonusData);
+
+					// add player data to managed list
+					topPlayers.Add(pData);
+				}
+			}
+		} else {
+			return false;
+		}
+
+		return true;
 	}
 }

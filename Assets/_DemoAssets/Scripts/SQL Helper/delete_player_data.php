@@ -1,5 +1,4 @@
 <?php
-
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
 
@@ -12,16 +11,14 @@
         echo "Failed to connect to MySQL: " . mysqli_connect_error();
     }
     
-    $newScore = $con->real_escape_string(isset($_GET['newScore']) ? $_GET['newScore'] : '');
-    $newName = $con->real_escape_string(isset($_GET['newName'])? $_GET['newName'] : '' );
+    $fb_id = $con->real_escape_string(isset($_GET['fb_id']) ? $_GET['fb_id'] : '');
 
-    if ( ! empty( $newName ) && !empty($newScore) )
+    if ( !empty($fb_id) )
     {
         // Perform queries 
-        $query = "INSERT INTO scores (name, score) VALUES ('$newName', '$newScore')";
+        $query = "DELETE FROM `tbl_player_data` WHERE 'fb_id'==$fb_id";
         mysqli_query($con,$query);
     }
 
     mysqli_close($con);
-
 ?>
