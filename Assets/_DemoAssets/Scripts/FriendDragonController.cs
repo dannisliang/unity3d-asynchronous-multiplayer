@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class FriendDragonController : MonoBehaviour {
@@ -21,24 +22,13 @@ public class FriendDragonController : MonoBehaviour {
 			return jumpData;
 		}
 		set {
-			jumpData = value;
+			jumpData = string.Copy (value);
 		}
 	}
 	
 	void Awake() {
 		dragonRigidbody = dragonModel.GetComponent<Rigidbody> ();
-
-		string[] jumbTimestampSt = jumpData.Split('|');
-
-		if (jumbTimestampSt.Length > 	1) {
-			Debug.Log(jumbTimestampSt.Length);
-			jumpTimestamps = new float[jumbTimestampSt.Length];
-			
-			for (int i = 0; i < jumpTimestamps.Length; i++) {
-				float timestamp = float.Parse (jumbTimestampSt [i]);
-				jumpTimestamps [i] = timestamp;
-			}
-		}
+		ExtractJumpData ();
 	}
 	
 	// Use this for initialization
@@ -64,7 +54,6 @@ public class FriendDragonController : MonoBehaviour {
 	
 	public void OnTapToPlay() {
 		enabled = true;
-		GetComponentInChildren<Rigidbody> ().useGravity = true;
 	}
 	
 	/// <summary>
@@ -83,6 +72,21 @@ public class FriendDragonController : MonoBehaviour {
 
 		enabled = false;
 		GetComponentInChildren<Rigidbody> ().useGravity = false;
+	}
+
+	public void ExtractJumpData() {
+		char[] delimiters = new char[] { '|' };
+		string[] jumbTimestampSt = jumpData.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+		
+		if (jumbTimestampSt.Length > 1) {
+			Debug.Log("jumbTimestampSt.Length = " + jumbTimestampSt.Length);
+			jumpTimestamps = new float[jumbTimestampSt.Length];
+			
+			for (int i = 0; i < jumpTimestamps.Length; i++) {
+				float timestamp = float.Parse (jumbTimestampSt [i]);
+				jumpTimestamps [i] = timestamp;
+			}
+		}
 	}
 }
 

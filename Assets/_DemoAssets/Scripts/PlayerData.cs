@@ -15,7 +15,7 @@ public class PlayerData {
 			return _fbID;
 		}
 		set {
-			_fbID = value;
+			_fbID = string.Copy (value);
 		}
 	}
 	
@@ -24,7 +24,7 @@ public class PlayerData {
 			return _fbName;
 		}
 		set {
-			_fbID = _fbName;
+			_fbName = string.Copy (value);
 		}
 	}
 	
@@ -33,7 +33,7 @@ public class PlayerData {
 			return _fbFriends;
 		}
 		set {
-			_fbFriends = value;
+			_fbFriends = string.Copy (value);
 		}
 	}
 	
@@ -51,7 +51,7 @@ public class PlayerData {
 			return _jumpData;
 		}
 		set {
-			_jumpData = value;
+			_jumpData = string.Copy (value);
 		}
 	}
 
@@ -60,8 +60,12 @@ public class PlayerData {
 			return _bonusData;
 		}
 		set {
-			_bonusData = value;
+			_bonusData = string.Copy (value);
 		}
+	}
+
+	public void LogAllInfos() {
+		Debug.Log ("ID="+ _fbID + "\t" + "Name="+ _fbName + "\t" + "Friends="+ _fbFriends + "\t" + "Score="+ _score + "\t" + "Jump="+ _jumpData + "\t" + "Bonus="+ _bonusData);
 	}
 
 	#endregion properties

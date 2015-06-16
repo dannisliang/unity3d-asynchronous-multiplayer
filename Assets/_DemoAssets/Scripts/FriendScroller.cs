@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class FriendScroller : MonoBehaviour {
@@ -19,23 +20,15 @@ public class FriendScroller : MonoBehaviour {
 		get {
 			return bonusData;
 		}
+		set {
+			bonusData = string.Copy (value);
+		}
 	}
 	
 	void Awake() {
 		enabled = false;
 		scrollTimeTotal = 0.0f;
-
-		string[] bonusTimestampSt = bonusData.Split('|');
-		
-		if (bonusTimestampSt.Length > 	1) {
-			Debug.Log(bonusTimestampSt.Length);
-			bonusTimestamps = new float[bonusTimestampSt.Length];
-			
-			for (int i = 0; i < bonusTimestamps.Length; i++) {
-				float timestamp = float.Parse (bonusTimestampSt [i]);
-				bonusTimestamps [i] = timestamp;
-			}
-		}
+		ExtractBonusData ();
 	}
 	
 	// Use this for initialization
@@ -84,5 +77,20 @@ public class FriendScroller : MonoBehaviour {
 	private void Reset() {
 		enabled = false;
 		scrollTimeTotal = 0.0f;
+	}
+
+	public void ExtractBonusData() {
+		char[] delimiters = new char[] { '|' };
+		string[] bonusTimestampSt = bonusData.Split (delimiters, StringSplitOptions.RemoveEmptyEntries);
+		
+		if (bonusTimestampSt.Length > 1) {
+			Debug.Log ("bonusTimestampSt.Length = " + bonusTimestampSt.Length);
+			bonusTimestamps = new float[bonusTimestampSt.Length];
+			
+			for (int i = 0; i < bonusTimestamps.Length; i++) {
+				float timestamp = float.Parse (bonusTimestampSt [i]);
+				bonusTimestamps [i] = timestamp;
+			}
+		}
 	}
 }
