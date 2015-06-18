@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class DatabaseController : MonoBehaviour {
-	public string insertQueryURL = "http://localhost/phpmyadmin/unity_test/insert_player_data.php?";
-	public string updateQueryURL = "http://localhost/phpmyadmin/unity_test/update_player_data.php?";
-	public string deleteQueryURL = "http://localhost/phpmyadmin/unity_test/delete_player_data.php?";
-	public string selectQueryURL = "http://localhost/phpmyadmin/unity_test/load_player_data.php";
+	public string insertQueryURL = "http://54.172.187.82/unitytest/insert_player_data.php?";
+	public string updateQueryURL = "http://54.172.187.82/unitytest/update_player_data.php?";
+	public string deleteQueryURL = "http://54.172.187.82/unitytest/delete_player_data.php?";
+	public string selectQueryURL = "http://54.172.187.82/unitytest/load_player_data.php?";
 
-	private List<PlayerData> topPlayers = new List<PlayerData> ();
+	private bool isLoading = false;
 	
 	private static DatabaseController _instance = null;
 	
@@ -23,12 +23,6 @@ public class DatabaseController : MonoBehaviour {
 			if (_instance == null)
 				_instance = GameObject.FindObjectOfType<DatabaseController>();
 			return _instance;
-		}
-	}
-
-	public List<PlayerData> TopPlayers {
-		get {
-			return topPlayers;
 		}
 	}
 
@@ -50,20 +44,14 @@ public class DatabaseController : MonoBehaviour {
 		}
 	}
 	
-	public void UpdatePlayerData(PlayerData playerData) {
-		if (!playerData.FacebookID.Equals ("")) {
-			StartCoroutine (UpdatePlayerDataRoutine (playerData));
-		}
+	public void LoadPlayerData(string playerFacebookID) {
+		StartCoroutine(LoadPlayerDataRoutine(playerFacebookID));
 	}
 	
-	public void DeletePlayerData(PlayerData playerData) {
-		if (!playerData.FacebookID.Equals ("")) {
-			StartCoroutine (DeletePlayerDataRoutine (playerData));
+	public void DeletePlayerData(string playerFacebookID) {
+		if (!playerFacebookID.Equals ("")) {
+			StartCoroutine (DeletePlayerDataRoutine (playerFacebookID));
 		}
-	}
-	
-	public void LoadPlayerData() {
-		StartCoroutine(LoadPlayerDataRoutine());
 	}
 	
 	IEnumerator InsertPlayerDataRoutine(PlayerData playerData)
@@ -75,31 +63,31 @@ public class DatabaseController : MonoBehaviour {
 			+ "&new_jump_data=" + WWW.EscapeURL(playerData.JumpData)
 			+ "&new_bonus_data=" + WWW.EscapeURL(playerData.BonusData);
 		
-		Debug.Log("requestURL = " + requestURL);
+		//Debug.Log("requestURL = " + requestURL);
 		
 		
 		WWW webRequest = new WWW(requestURL);
 		
 		yield return webRequest;
 		
-		if (webRequest.error != null) {
-			Debug.Log ("Save request error: " + webRequest.error);
-		} else {
-			Debug.Log (webRequest.text);
-			Debug.Log("InsertPlayerDataRoutine successful!");
-		}
+		GameManager.Instance.OnUpdatePlayerDataFinish(webRequest.error == null);
 	}
 	
-	IEnumerator UpdatePlayerDataRoutine(PlayerData playerData)
+	IEnumerator LoadPlayerDataRoutine(string playerFacebookID)
 	{
-		playerData.LogAllInfos ();
+		string requestURL = selectQueryURL + "fb_id=" + WWW.EscapeURL(playerFacebookID);
+		Debug.Log("requestURL = " + requestURL);
 
-		string requestURL = updateQueryURL + "fb_id=" + WWW.EscapeURL(playerData.FacebookID)
-			+ "&new_fb_name=" + WWW.EscapeURL(playerData.FacebookName)
-			+ "&new_fb_friends=" + WWW.EscapeURL(playerData.FacebookFriends)
-			+ "&new_score=" + playerData.Score
-			+ "&new_jump_data=" + WWW.EscapeURL(playerData.JumpData)
-			+ "&new_bonus_data=" + WWW.EscapeURL(playerData.BonusData);
+		WWW webRequest = new WWW(requestURL);
+		
+		yield return webRequest;
+		
+		GameManager.Instance.OnLoadPlayerDatasFinish(webRequest.error == null, webRequest.text);
+	}
+	
+	IEnumerator DeletePlayerDataRoutine(string playerFacebookID)
+	{
+		string requestURL = deleteQueryURL + "new_fb_id=" + WWW.EscapeURL(playerFacebookID);
 		
 		Debug.Log("requestURL = " + requestURL);
 		
@@ -108,45 +96,7 @@ public class DatabaseController : MonoBehaviour {
 		
 		yield return webRequest;
 		
-		if (webRequest.error != null) {
-			Debug.Log ("Save request error: " + webRequest.error);
-		} else {
-			Debug.Log("UpdatePlayerDataRoutine successful!");
-		}
-	}
-	
-	IEnumerator DeletePlayerDataRoutine(PlayerData playerData)
-	{
-		string requestURL = deleteQueryURL + "new_fb_id=" + WWW.EscapeURL(playerData.FacebookID);
-		
-		Debug.Log("requestURL = " + requestURL);
-		
-		
-		WWW webRequest = new WWW(requestURL);
-		
-		yield return webRequest;
-		
-		if (webRequest.error != null) {
-			Debug.Log ("Save request error: " + webRequest.error);
-		} else {
-			Debug.Log(webRequest.text);
-		}
-	}
-	
-	IEnumerator LoadPlayerDataRoutine()
-	{
-		WWW webRequest = new WWW(selectQueryURL);
-		
-		yield return webRequest;
-		
-		if (webRequest.error != null)
-		{
-			Debug.Log("Load request error: " + webRequest.error);
-		}
-		else
-		{
-			DeserializePlayerDatas(webRequest.text);
-		}
+		GameManager.Instance.OnDeletePlayerDataFinish(webRequest.error == null);
 	}
 	
 	public string Md5Sum(string strToEncrypt)
@@ -167,38 +117,5 @@ public class DatabaseController : MonoBehaviour {
 		}
 		
 		return hashString.PadLeft(32, '0');
-	}
-
-	private bool DeserializePlayerDatas(string returnedText) {
-		char[] rowDelimiters = new char[] { '\n' };
-		string[] rows = returnedText.Split (rowDelimiters, StringSplitOptions.RemoveEmptyEntries);
-
-		if (rows != null && rows.Length > 0) {
-			char[] colDelimiters = new char[] { ';' };
-
-			for (int i = 0; i < rows.Length; i++) {
-				string[] cols = rows[i].Split(colDelimiters, StringSplitOptions.RemoveEmptyEntries);
-
-				if (cols != null && cols.Length > 5) {
-					PlayerData pData = new PlayerData();
-
-					pData.FacebookID = cols[0];
-					pData.FacebookName = cols[1];
-					pData.FacebookFriends = cols[2];
-					pData.Score = int.Parse(cols[3]);
-					pData.JumpData = cols[4];
-					pData.BonusData = cols[5];
-
-					//Debug.Log (pData.FacebookID + "\t" + pData.FacebookName + "\t" + pData.FacebookFriends + "\t" + pData.Score + "\t" + pData.JumpData + "\t" + pData.BonusData);
-
-					// add player data to managed list
-					topPlayers.Add(pData);
-				}
-			}
-		} else {
-			return false;
-		}
-
-		return true;
 	}
 }

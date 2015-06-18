@@ -3,7 +3,7 @@
     ini_set('display_errors', 1);
 
 
-    $con = mysqli_connect("localhost","root","","unity_test_db");
+    $con = mysqli_connect("localhost","root","awsasnet","unitytestdb");
 
     // Check connection
     if (mysqli_connect_errno())

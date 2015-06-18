@@ -7,13 +7,12 @@ public class GameManager : MonoBehaviour {
 	/// <summary>
 	/// The dragon prefab.
 	/// </summary>
-	public Object friendDragonPrefab;
+	public UnityEngine.Object friendDragonPrefab;
 
 	/// <summary>
 	/// The dragon.
 	/// </summary>
 	public GameObject dragon = null;
-	public GameObject friendDragonsObject = null;
 
 	private List<GameObject> friendDragons = new List<GameObject> ();
 
@@ -22,12 +21,13 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	private PlayerData playerDataSaved = null;
 	private PlayerData playerData = null;
-	private List<PlayerData> topPlayerDatas;
+	private List<PlayerData> topPlayerDatas = new List<PlayerData> ();
 
 	/// <summary>
 	/// The is player died.
 	/// </summary>
 	private bool isPlayerDied = false;
+	private bool isWaiting = false;
 
 	public PlayerData GetPlayerData {
 		get {
@@ -55,23 +55,21 @@ public class GameManager : MonoBehaviour {
 	void Awake() {
 		// create memory for saving player data
 		playerData = new PlayerData ();
-		
-		// TODO Login Facebook and get these informations
-		if (true) {
-			playerData.FacebookID = "123456";
-			playerData.FacebookName = "Trung Ngo";
-			playerData.FacebookFriends = "123450|123452|123453|123454|123455";
-			
-			playerData.LogAllInfos();
-		}
-
-		//TODO create slots for storing friend's dragons (if there's any)
-		StartCoroutine (LoadPlayerDatas ());
-
 	}
 
 	// Use this for initialization
 	void Start () {
+		// TODO Login Facebook and get these informations
+		if (true) {
+			playerData.FacebookID = "123457";
+			playerData.FacebookName = "Cuong Ngo";
+			playerData.FacebookFriends = "123451|123452";
+			
+			playerData.LogAllInfos();
+		}
+
+		// Load player's datas from database
+		LoadPlayerDatasFromDatabase ();
 	}
 	
 	// Update is called once per frame
@@ -83,17 +81,8 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	IEnumerator LoadPlayerDatas() {
-		DatabaseController.Instance.LoadPlayerData ();
-
-		yield return null;
-
-		topPlayerDatas = DatabaseController.Instance.TopPlayers;
-
-		CreateFriendDragons ();
-	}
-
 	void CreateFriendDragons() {
+		Debug.Log ("CreateFriendDragons: topPlayerDatas.Count = " + topPlayerDatas.Count);
 		foreach (var pData in topPlayerDatas) {
 			//Debug.Log (pData.FacebookID + "\t" + pData.FacebookName + "\t" + pData.FacebookFriends + "\t" + pData.Score + "\t" + pData.JumpData + "\t" + pData.BonusData);
 
@@ -181,40 +170,96 @@ public class GameManager : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Updates the player data to database.
-	/// </summary>
-	/// <returns><c>true</c>, if player data to database was updated, <c>false</c> otherwise.</returns>
-	public bool UpdatePlayerDataToDatabase() {
-		// TODO Check if player has not logged into Facebook
-		if (false) {
-			return false;
-		} else {
-			// Check if 
-		}
-
-		if (playerDataSaved == null || playerDataSaved.Score < playerData.Score) {
-			// Insert/update player data to database.
-			DatabaseController.Instance.InsertPlayerData (playerData);
-		}
-
-		return true;
-	}
-
-	/// <summary>
 	/// Loads the player data from database.
 	/// </summary>
 	/// <returns><c>true</c>, if player data from database was loaded, <c>false</c> otherwise.</returns>
-	public bool LoadPlayerDataFromDatabase() {
-		return true;
-	}
+	public void LoadPlayerDatasFromDatabase() {
+		isWaiting = true;
 
+		DatabaseController.Instance.LoadPlayerData (playerData.FacebookID);
+	}
+	
 	/// <summary>
-	/// Loads the friend player data from database.
+	/// Updates the player data to database.
 	/// </summary>
-	/// <returns><c>true</c>, if friend player data from database was loaded, <c>false</c> otherwise.</returns>
-	public bool LoadFriendPlayerDataFromDatabase() {
-		return true;
+	/// <returns><c>true</c>, if player data to database was updated, <c>false</c> otherwise.</returns>
+	public void UpdatePlayerDataToDatabase() {
+		isWaiting = true;
+
+		// TODO Check if player has not logged into Facebook
+		if (false) {
+			return;
+		} else {
+			// Check if 
+		}
+		
+		if (playerDataSaved == null || playerDataSaved.Score < playerData.Score) {
+			if (playerDataSaved != null)
+				playerDataSaved.LogAllInfos();
+			playerData.LogAllInfos();
+			// Insert/update player data to database.
+			DatabaseController.Instance.InsertPlayerData (playerData);
+		}
 	}
 
+	public void DeletePlayerDatasFromDatabase() {
+		isWaiting = true;
+		DatabaseController.Instance.DeletePlayerData (playerData.FacebookID);
+	}
 
+	public void OnLoadPlayerDatasFinish(bool isSuccess, string returnedString) {
+		if (isSuccess) {
+			DeserializePlayerDatas (returnedString);
+
+			CreateFriendDragons();
+		}
+
+		isWaiting = false;
+
+		Debug.Log ("OnLoadPlayerDatasFinish " + isSuccess);
+		Debug.Log ("returnedString = " + returnedString);
+	}
+
+	public void OnUpdatePlayerDataFinish(bool isSuccess) {
+		isWaiting = false;
+	}
+
+	public void OnDeletePlayerDataFinish(bool isSuccess) {
+		isWaiting = false;
+	}
+	
+	private bool DeserializePlayerDatas(string returnedText) {
+		char[] rowDelimiters = new char[] { '\n' };
+		string[] rows = returnedText.Split (rowDelimiters, System.StringSplitOptions.RemoveEmptyEntries);
+		
+		if (rows != null && rows.Length > 0) {
+			char[] colDelimiters = new char[] { ';' };
+			
+			for (int i = 0; i < rows.Length; i++) {
+				string[] cols = rows[i].Split(colDelimiters, System.StringSplitOptions.RemoveEmptyEntries);
+				
+				if (cols != null && cols.Length > 5) {
+					PlayerData pData = new PlayerData();
+					
+					pData.FacebookID = cols[0];
+					pData.FacebookName = cols[1];
+					pData.FacebookFriends = cols[2];
+					pData.Score = int.Parse(cols[3]);
+					pData.JumpData = cols[4];
+					pData.BonusData = cols[5];
+					
+					pData.LogAllInfos();
+					
+					// add player data to managed list
+					topPlayerDatas.Add(pData);
+				}
+			}
+		} else {
+			return false;
+		}
+		
+		Debug.Log ("DeserializePlayerDatas: topPlayers.Count = " + topPlayerDatas.Count);
+		
+		return true;
+	}
 }

@@ -6,17 +6,19 @@
     ini_set('display_errors', 1);
 
     // after we're logged in, we can call our database
-    $con = mysqli_connect("localhost","root","","unity_test_db");
+    $con = mysqli_connect("localhost","root","awsasnet","unitytestdb");
 
     // Check connection
     if (mysqli_connect_errno())
     {
         echo "Failed to connect to MySQL: " . mysqli_connect_error();
     }
+
+    $fb_id = $con->real_escape_string(isset($_GET['fb_id']) ? $_GET['fb_id'] : '');
     
     // now we simply get the scores and sort them by their value. we also add a limit of 5, so we only
     // select the 5 highest values. The * means we search through every value.
-    $query = "SELECT * FROM tbl_player_data ORDER by score DESC LIMIT 10";
+    $query = "SELECT * FROM `tbl_player_data` WHERE (`fb_id`='$fb_id' OR  `fb_friends` LIKE CONCAT(  '%',  '$fb_id',  '%' )) ORDER by `score` DESC LIMIT 0 , 10";
     
     // now we store our selected values into a result variable
     $result = mysqli_query($con,$query);
