@@ -62,18 +62,14 @@ public class Scroller : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Raises the dragon killed event.
-	/// </summary>
-	public void OnDragonKilled() {
-		Reset ();
-	}
-
-	/// <summary>
 	/// Reset this instance.
 	/// </summary>
-	private void Reset() {
+	public void Reset() {
 		enabled = false;
+		scrollSpeed = ScrollSpeedNormal;
+		scrollSpeedBonus = 1.0f;
 		scrollTimeTotal = 0.0f;
+		bonusData = "";
 		gotBonusBall = false;
 	}
 }

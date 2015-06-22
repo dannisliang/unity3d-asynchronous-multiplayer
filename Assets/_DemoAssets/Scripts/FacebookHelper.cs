@@ -4,10 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class FacebookUserInfo {
-	public string userID;
-	public string userName;
-	public string userFriends;
-	public Image userAvatar;
+	public string userID = "";
+	public string userName = "";
+	public string userFriends = "";
+	public Image userAvatar = null;
 
 	public void LogInfo() {
 		Debug.Log ("User info" + userID + " - " + userName + " - " + userFriends);
@@ -88,6 +88,8 @@ public class FacebookHelper : MonoBehaviour {
 			btnLogin.enabled = false;
 			btnHighscore.enabled = true;
 			btnPlay.enabled = true;
+
+			btnLogin.GetComponent<Text>().text = "Log Out Facebook";
 		}
 	}
 
@@ -101,7 +103,7 @@ public class FacebookHelper : MonoBehaviour {
 
 	public void OnGameOver() {
 		// Show Facebook panel
-		Application.LoadLevel("Main");
+		facebookPanel.SetActive (true);
 	}
 
 	void DealWithFacebookLoggedIn() {
@@ -136,9 +138,6 @@ public class FacebookHelper : MonoBehaviour {
 		{
 			GameManager.Instance.OnPlayerLoginFacebook (false);
 		}
-
-		btnHighscore.enabled = true;
-		btnPlay.enabled = true;
 	}
 	
 	void GetUserInfoCallback(FBResult result)
@@ -188,15 +187,16 @@ public class FacebookHelper : MonoBehaviour {
 		userInfo.userAvatar = PlayerAvatar.GetComponent<Image> ();
 		userInfo.userAvatar.sprite = Sprite.Create (result.Texture, new Rect (0, 0, 128, 128), new Vector2 (0, 0));
 
+		userInfo.LogInfo ();
+		
 		isLoggedInSuccessful = true;
+
+		GameManager.Instance.OnPlayerLoginFacebook (isLoggedInSuccessful);
 		
 		btnLogin.enabled = false;
 		btnHighscore.enabled = true;
 		btnPlay.enabled = true;
-
-		userInfo.LogInfo ();
-
-		GameManager.Instance.OnPlayerLoginFacebook (isLoggedInSuccessful);
+		btnLogin.GetComponentInChildren<Text>().text = "Log Out Facebook";
 	}
 	
 	#endregion

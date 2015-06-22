@@ -8,8 +8,6 @@ public class FriendDragonController : MonoBehaviour {
 	// The force which is added when the player jumps
 	// This can be changed in the Inspector window
 	public Vector3 jumpForce = new Vector3(0, 300, 0);
-
-	// FIXME change jumpData to private when testing done
 	public string jumpData = "";
 	
 	private float playTimeTotal = 0.0f;
@@ -54,13 +52,7 @@ public class FriendDragonController : MonoBehaviour {
 	
 	public void OnTapToPlay() {
 		enabled = true;
-	}
-	
-	/// <summary>
-	/// Raises the dragon killed event.
-	/// </summary>
-	public void OnDragonKilled() {
-		Reset ();
+		dragonRigidbody.useGravity = true;
 	}
 	
 	/// <summary>
@@ -69,9 +61,10 @@ public class FriendDragonController : MonoBehaviour {
 	public void Reset() {
 		playTimeTotal = 0.0f;
 		currentJumpTimestampIndex = 0;
-
 		enabled = false;
-		GetComponentInChildren<Rigidbody> ().useGravity = false;
+		dragonRigidbody.useGravity = false;
+		dragonRigidbody.velocity = Vector3.zero;
+		dragonModel.transform.position = new Vector3 (-2.5f, -0.25f, 0f);
 	}
 
 	public void ExtractJumpData() {

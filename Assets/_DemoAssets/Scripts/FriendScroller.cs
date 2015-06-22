@@ -10,9 +10,7 @@ public class FriendScroller : MonoBehaviour {
 	private float scrollSpeed = 2.0f;
 	private float scrollSpeedBonus = 1.0f;
 	private float scrollTimeTotal = 0.0f;
-	
-	// FIXME change bonusData to private when testing done
-	public string bonusData = "";
+	private string bonusData = "";
 	private float[] bonusTimestamps;
 	private int currentBonusTimestampIndex = 0;
 	
@@ -65,18 +63,14 @@ public class FriendScroller : MonoBehaviour {
 	}
 	
 	/// <summary>
-	/// Raises the dragon killed event.
-	/// </summary>
-	public void OnDragonKilled() {
-		Reset ();
-	}
-	
-	/// <summary>
 	/// Reset this instance.
 	/// </summary>
-	private void Reset() {
+	public void Reset() {
 		enabled = false;
+		scrollSpeed = ScrollSpeedNormal;
+		scrollSpeedBonus = 1.0f;
 		scrollTimeTotal = 0.0f;
+		currentBonusTimestampIndex = 0;
 	}
 
 	public void ExtractBonusData() {

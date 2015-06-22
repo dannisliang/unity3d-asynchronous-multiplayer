@@ -6,14 +6,17 @@ public class GameManager : MonoBehaviour {
 
 	/// <summary>
 	/// The dragon prefab.
-	/// </summary>
+	/// </summar>
 	public UnityEngine.Object friendDragonPrefab;
+
+	public GameObject btnTapToPlay = null;
+	public GameObject btnTouchToContinue = null;
+	public GameObject mainCanvas = null;
 
 	/// <summary>
 	/// The dragon.
 	/// </summary>
 	public GameObject dragon = null;
-
 	private List<GameObject> friendDragons = new List<GameObject> ();
 
 	/// <summary>
@@ -58,6 +61,8 @@ public class GameManager : MonoBehaviour {
 		if (playerData == null) {
 			playerData = new PlayerData ();
 		}
+
+		btnTouchToContinue.SetActive (false);
 	}
 
 	// Use this for initialization
@@ -91,7 +96,7 @@ public class GameManager : MonoBehaviour {
 			scroller.ExtractBonusData();
 			
 			// Cached your data on SQL server
-			if (pData.FacebookID == playerData.FacebookID) {
+			if (pData.FacebookID.Equals(playerData.FacebookID)) {
 				playerDataSaved = pData;
 				friendDragon.GetComponentInChildren<TextMesh>().text = "You";
 			}
@@ -107,9 +112,9 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	void KillDragon() {
 		if (dragon != null) {
+			dragon.GetComponentInChildren<Rigidbody> ().isKinematic = true;
 			dragon.GetComponent<Scroller> ().enabled = false;
 			dragon.GetComponent<DragonController> ().enabled = false;
-			dragon.GetComponentInChildren<Rigidbody> ().isKinematic = true;
 		}
 	}
 
@@ -121,14 +126,23 @@ public class GameManager : MonoBehaviour {
 		if (dragon != null) {
 			dragon.GetComponent<Scroller> ().OnTapToPlay ();
 			dragon.GetComponent<DragonController> ().OnTapToPlay ();
-			dragon.GetComponentInChildren<Rigidbody> ().useGravity = true;
 		}
 
 		foreach (var friendDragon in friendDragons) {
 			friendDragon.GetComponent<FriendScroller> ().OnTapToPlay ();
 			friendDragon.GetComponent<FriendDragonController> ().OnTapToPlay ();
-			friendDragon.GetComponentInChildren<Rigidbody> ().useGravity = true;
 		}
+	}
+
+	/// <summary>
+	/// Raises the touch to continue event.
+	/// </summary>
+	public void OnTouchToContinue() {
+		// Notify Facebook helper instance
+		FacebookHelper.Instance.OnGameOver ();
+		
+		// Reset game
+		ResetGameScene ();
 	}
 
 	/// <summary>
@@ -207,17 +221,19 @@ public class GameManager : MonoBehaviour {
 	public void UpdatePlayerDataToDatabase() {
 		isWaiting = true;
 
-		// TODO Check if player has not logged into Facebook
-		if (false) {
+		// Check if player has not logged into Facebook
+		if (!FacebookHelper.Instance.IsLoggedInSuccessful) {
+			OnUpdatePlayerDataFinish(false);
 			return;
-		} else {
-			// Check if 
 		}
 		
 		if (playerDataSaved == null || playerDataSaved.Score < playerData.Score) {
-			if (playerDataSaved != null)
-				playerDataSaved.LogAllInfos ();
-			playerData.LogAllInfos ();
+			if (playerDataSaved != null) {
+				playerDataSaved.Score = playerData.Score;
+				playerDataSaved.JumpData = playerData.JumpData;
+				playerDataSaved.BonusData = playerData.BonusData;
+			}
+
 			// Insert/update player data to database.
 			DatabaseController.Instance.InsertPlayerData (playerData);
 		} else {
@@ -246,10 +262,7 @@ public class GameManager : MonoBehaviour {
 	public void OnUpdatePlayerDataFinish(bool isSuccess) {
 		isWaiting = false;
 
-		// TODO Reset game
-
-		// Notify Facebook helper instance
-		FacebookHelper.Instance.OnGameOver ();
+		btnTouchToContinue.SetActive (true);
 	}
 
 	public void OnUpdatePlayerInfoFinish(bool isSuccess) {
@@ -261,6 +274,53 @@ public class GameManager : MonoBehaviour {
 
 	public void OnDeletePlayerDataFinish(bool isSuccess) {
 		isWaiting = false;
+	}
+
+	private void ResetGameScene() {
+		Vector3 translateVec = new Vector3 (-dragon.transform.position.x, 0, 0);
+		
+		// Reset dragon to start position
+		dragon.transform.Translate (translateVec);
+		dragon.GetComponent<DragonController> ().Reset ();
+		dragon.GetComponent<Scroller> ().Reset ();
+
+		// Reset player data
+		playerData.Score = 0;
+		playerData.JumpData = "";
+		playerData.BonusData = "";
+
+		// Reset friend dragons position
+		foreach (var friendDragon in friendDragons) {
+			friendDragon.transform.Translate(translateVec);
+			friendDragon.GetComponent<FriendDragonController> ().Reset ();
+			friendDragon.GetComponent<FriendScroller> ().Reset ();
+
+			if (playerDataSaved != null) {
+				if (friendDragon.GetComponentInChildren<TextMesh>().text.Equals("You")) {
+					friendDragon.GetComponent<FriendDragonController> ().JumpData = playerDataSaved.JumpData;
+					friendDragon.GetComponent<FriendDragonController> ().ExtractJumpData();
+
+					friendDragon.GetComponent<FriendScroller> ().BonusData = playerDataSaved.BonusData;
+					friendDragon.GetComponent<FriendScroller> ().ExtractBonusData();
+				}
+			}
+		}
+
+		// Reset green balls
+		GameObject[] greenBalls = GameObject.FindGameObjectsWithTag ("GreenBall");
+		foreach (var greenBall in greenBalls) {
+			greenBall.GetComponentInChildren<MeshRenderer>().enabled = true;
+			greenBall.GetComponentInChildren<Collider>().enabled = true;
+		}
+
+		// Reset bonus balls
+		GameObject[] bonusBalls = GameObject.FindGameObjectsWithTag ("BonusBall");
+		foreach (var bonusBall in bonusBalls) {
+			bonusBall.GetComponentInChildren<MeshRenderer>().enabled = true;
+			bonusBall.GetComponentInChildren<Collider>().enabled = true;
+		}
+
+		btnTapToPlay.SetActive (true);
 	}
 	
 	private bool DeserializePlayerDatas(string returnedText) {

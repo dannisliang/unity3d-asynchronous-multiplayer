@@ -45,13 +45,8 @@ public class DragonController : MonoBehaviour {
 
 	public void OnTapToPlay() {
 		enabled = true;
-	}
-	
-	/// <summary>
-	/// Raises the dragon killed event.
-	/// </summary>
-	public void OnDragonKilled() {
-		Reset ();
+		dragonRigidbody.useGravity = true;
+		dragonRigidbody.isKinematic = false;
 	}
 	
 	/// <summary>
@@ -59,6 +54,10 @@ public class DragonController : MonoBehaviour {
 	/// </summary>
 	public void Reset() {
 		playTimeTotal = 0.0f;
+		enabled = false;
 		jumpData = "";
+		dragonRigidbody.velocity = Vector3.zero;
+		dragonRigidbody.useGravity = false;
+		dragonModel.transform.position = new Vector3 (-2.5f, -0.25f, 0f);
 	}
 }

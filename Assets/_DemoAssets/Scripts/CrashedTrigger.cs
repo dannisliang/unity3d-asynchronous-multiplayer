@@ -18,7 +18,6 @@ public class CrashedTrigger : MonoBehaviour {
 	/// </summary>
 	/// <param name="other">Other.</param>
 	void OnTriggerEnter(Collider other) {
-		other.enabled = false;
 		GameManager.Instance.OnDragonCrashed ();
 	}
 }
