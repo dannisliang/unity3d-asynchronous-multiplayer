@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour {
 	/// <summary>
 	/// The player data.
 	/// </summary>
+	private FacebookUserInfo playerFacebookInfo = null;
 	private PlayerData playerDataSaved = null;
 	private PlayerData playerData = null;
 	private List<PlayerData> topPlayerDatas = new List<PlayerData> ();
@@ -54,22 +55,13 @@ public class GameManager : MonoBehaviour {
 
 	void Awake() {
 		// create memory for saving player data
-		playerData = new PlayerData ();
+		if (playerData == null) {
+			playerData = new PlayerData ();
+		}
 	}
 
 	// Use this for initialization
 	void Start () {
-		// TODO Login Facebook and get these informations
-		if (true) {
-			playerData.FacebookID = "123457";
-			playerData.FacebookName = "Cuong Ngo";
-			playerData.FacebookFriends = "123451|123452";
-			
-			playerData.LogAllInfos();
-		}
-
-		// Load player's datas from database
-		LoadPlayerDatasFromDatabase ();
 	}
 	
 	// Update is called once per frame
@@ -169,6 +161,29 @@ public class GameManager : MonoBehaviour {
 		UpdatePlayerDataToDatabase ();
 	}
 
+	public void OnPlayerLoginFacebook(bool isSuccessful) {
+		if (playerData == null) {
+			playerData = new PlayerData();
+		}
+
+		if (isSuccessful) {
+			playerFacebookInfo = FacebookHelper.Instance.UserInfo;
+
+			playerData.FacebookID = playerFacebookInfo.userID;
+			playerData.FacebookName = playerFacebookInfo.userName;
+			playerData.FacebookFriends = playerFacebookInfo.userFriends;
+			
+			playerData.LogAllInfos ();
+
+			// Update player's facebook info (name, friends) to database
+			UpdatePlayerFacebookInfoToDatabase();
+		} else {
+			playerData.FacebookID = "";
+			playerData.FacebookName = "Anonymous Player";
+			playerData.FacebookFriends = "";
+		}
+	}
+
 	/// <summary>
 	/// Loads the player data from database.
 	/// </summary>
@@ -177,6 +192,12 @@ public class GameManager : MonoBehaviour {
 		isWaiting = true;
 
 		DatabaseController.Instance.LoadPlayerData (playerData.FacebookID);
+	}
+
+	public void UpdatePlayerFacebookInfoToDatabase() {
+		isWaiting = true;
+
+		DatabaseController.Instance.UpdatePlayerInfo (playerData);
 	}
 	
 	/// <summary>
@@ -195,10 +216,12 @@ public class GameManager : MonoBehaviour {
 		
 		if (playerDataSaved == null || playerDataSaved.Score < playerData.Score) {
 			if (playerDataSaved != null)
-				playerDataSaved.LogAllInfos();
-			playerData.LogAllInfos();
+				playerDataSaved.LogAllInfos ();
+			playerData.LogAllInfos ();
 			// Insert/update player data to database.
 			DatabaseController.Instance.InsertPlayerData (playerData);
+		} else {
+			OnUpdatePlayerDataFinish(false);
 		}
 	}
 
@@ -222,6 +245,18 @@ public class GameManager : MonoBehaviour {
 
 	public void OnUpdatePlayerDataFinish(bool isSuccess) {
 		isWaiting = false;
+
+		// TODO Reset game
+
+		// Notify Facebook helper instance
+		FacebookHelper.Instance.OnGameOver ();
+	}
+
+	public void OnUpdatePlayerInfoFinish(bool isSuccess) {
+		isWaiting = false;
+		
+		// Load player's datas from database
+		LoadPlayerDatasFromDatabase ();
 	}
 
 	public void OnDeletePlayerDataFinish(bool isSuccess) {

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class DatabaseController : MonoBehaviour {
 	public string insertQueryURL = "http://54.172.187.82/unitytest/insert_player_data.php?";
-	public string updateQueryURL = "http://54.172.187.82/unitytest/update_player_data.php?";
+	public string updateQueryURL = "http://54.172.187.82/unitytest/update_player_info.php?";
 	public string deleteQueryURL = "http://54.172.187.82/unitytest/delete_player_data.php?";
 	public string selectQueryURL = "http://54.172.187.82/unitytest/load_player_data.php?";
 
@@ -43,6 +43,12 @@ public class DatabaseController : MonoBehaviour {
 			StartCoroutine (InsertPlayerDataRoutine (playerData));
 		}
 	}
+
+	public void UpdatePlayerInfo(PlayerData playerData) {
+		if (!playerData.FacebookID.Equals ("")) {
+			StartCoroutine (UpdatePlayerInfoRoutine (playerData));
+		}
+	}
 	
 	public void LoadPlayerData(string playerFacebookID) {
 		StartCoroutine(LoadPlayerDataRoutine(playerFacebookID));
@@ -63,14 +69,24 @@ public class DatabaseController : MonoBehaviour {
 			+ "&new_jump_data=" + WWW.EscapeURL(playerData.JumpData)
 			+ "&new_bonus_data=" + WWW.EscapeURL(playerData.BonusData);
 		
-		//Debug.Log("requestURL = " + requestURL);
-		
-		
 		WWW webRequest = new WWW(requestURL);
 		
 		yield return webRequest;
 		
 		GameManager.Instance.OnUpdatePlayerDataFinish(webRequest.error == null);
+	}
+	
+	IEnumerator UpdatePlayerInfoRoutine(PlayerData playerData)
+	{
+		string requestURL = updateQueryURL + "fb_id=" + WWW.EscapeURL(playerData.FacebookID)
+			+ "&new_fb_name=" + WWW.EscapeURL(playerData.FacebookName)
+			+ "&new_fb_friends=" + WWW.EscapeURL(playerData.FacebookFriends);
+
+		WWW webRequest = new WWW(requestURL);
+		
+		yield return webRequest;
+		
+		GameManager.Instance.OnUpdatePlayerInfoFinish(webRequest.error == null);
 	}
 	
 	IEnumerator LoadPlayerDataRoutine(string playerFacebookID)
