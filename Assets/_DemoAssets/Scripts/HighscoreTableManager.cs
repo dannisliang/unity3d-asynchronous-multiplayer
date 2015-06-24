@@ -18,13 +18,11 @@ public class HighscoreTableManager : MonoBehaviour {
 	
 	}	
 
-	public void CreateTable(List<PlayerData> topPlayerDatas) {
-		PlayerData[] playerDatas = topPlayerDatas.ToArray ();
-
-		for (int i = 0; i < playerDatas.Length; i++) {
+	public void CreateTable(PlayerData[] topPlayerDatas) {
+		for (int i = 0; i < topPlayerDatas.Length; i++) {
 			highscorePlayers[i].SetActive(true);
 			
-			highscorePlayers[i].GetComponent<PlayerHighscore>().SetInfo(playerDatas[i].FacebookName, playerDatas[i].Score);
+			highscorePlayers[i].GetComponent<PlayerHighscore>().SetInfo(topPlayerDatas[i].FacebookName, topPlayerDatas[i].Score);
 		}
 	}
 }

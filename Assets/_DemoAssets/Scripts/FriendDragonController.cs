@@ -8,7 +8,7 @@ public class FriendDragonController : MonoBehaviour {
 	// The force which is added when the player jumps
 	// This can be changed in the Inspector window
 	public Vector3 jumpForce = new Vector3(0, 300, 0);
-	public string jumpData = "";
+	private string jumpData = "";
 	
 	private float playTimeTotal = 0.0f;
 	private Rigidbody dragonRigidbody;

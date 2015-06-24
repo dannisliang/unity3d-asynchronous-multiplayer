@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
+	
+	public readonly int MaxFriendDragon = 6;
 
 	/// <summary>
 	/// The dragon prefab.
@@ -18,7 +20,7 @@ public class GameManager : MonoBehaviour {
 	/// The dragon.
 	/// </summary>
 	public GameObject dragon = null;
-	private List<GameObject> friendDragons = new List<GameObject> ();
+	private GameObject[] friendDragons = null;
 
 	/// <summary>
 	/// The player data.
@@ -26,14 +28,12 @@ public class GameManager : MonoBehaviour {
 	private FacebookUserInfo playerFacebookInfo = null;
 	private PlayerData playerDataSaved = null;
 	private PlayerData playerData = null;
-	private List<PlayerData> topPlayerDatas = new List<PlayerData> ();
+	private PlayerData[] topPlayerDatas = null;
 
 	/// <summary>
 	/// The is player died.
 	/// </summary>
 	private bool isPlayerDied = false;
-	private bool isLoading = false;
-	private bool isPositionChanged = false;
 
 	public PlayerData GetPlayerData {
 		get {
@@ -81,16 +81,14 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void CreateFriendDragons() {
-		Debug.Log ("CreateFriendDragons: topPlayerDatas.Count = " + topPlayerDatas.Count);
-		PlayerData[] playerDatas = topPlayerDatas.ToArray ();
+		int playerDataCount = topPlayerDatas.Length;
 
-		for (int i = 0; i < playerDatas.Length; i++) {
-			PlayerData pData = playerDatas[i];
-			GameObject friendDragon = null;
+		friendDragons = new GameObject[MaxFriendDragon];
+		for (int i = 0; i < MaxFriendDragon; i++) {
+			PlayerData pData = topPlayerDatas[i];
+			GameObject friendDragon = (GameObject) Instantiate(friendDragonPrefab, Vector3.zero, Quaternion.identity);
 
-			if (i < 5) {
-				friendDragon = (GameObject) Instantiate(friendDragonPrefab, Vector3.zero, Quaternion.identity);
-
+			if (i < playerDataCount) {
 				// Set data for controller component
 				FriendDragonController controller = friendDragon.GetComponent<FriendDragonController> ();
 				controller.JumpData = pData.JumpData;
@@ -100,19 +98,59 @@ public class GameManager : MonoBehaviour {
 				FriendScroller scroller = friendDragon.GetComponent<FriendScroller> ();
 				scroller.BonusData = pData.BonusData;
 				scroller.ExtractBonusData();
-					
+
 				friendDragon.GetComponentInChildren<TextMesh>().text = pData.FacebookName;
 				
-				friendDragons.Add (friendDragon);
-			}
-			
-			// Cached your data on SQL server
-			if (pData.FacebookID.Equals(playerData.FacebookID)) {
-				playerDataSaved = pData;
-
-				if (friendDragon != null) {
-					friendDragon.GetComponentInChildren<TextMesh>().text = "You";
+				// Cached your data on SQL server
+				if (pData.FacebookID.Equals(playerData.FacebookID)) {
+					playerDataSaved = pData;
+					
+					if (friendDragon != null) {
+						friendDragon.GetComponentInChildren<TextMesh>().text = "You";
+					}
 				}
+			}
+			else {
+				friendDragon.SetActive(false);
+			}
+
+			friendDragons[i] = friendDragon;
+		}
+	}
+	
+	void UpdateFriendDragonsInfo() {
+		int playerDataCount = topPlayerDatas.Length;
+		
+		for (int i = 0; i < MaxFriendDragon; i++) {
+			PlayerData pData = topPlayerDatas[i];
+			GameObject friendDragon = friendDragons[i];
+			
+			if (i < playerDataCount) {
+				friendDragon.SetActive(true);
+
+				// Set data for controller component
+				FriendDragonController controller = friendDragon.GetComponent<FriendDragonController> ();
+				controller.JumpData = pData.JumpData;
+				controller.ExtractJumpData();
+				
+				// Set data for scroller component
+				FriendScroller scroller = friendDragon.GetComponent<FriendScroller> ();
+				scroller.BonusData = pData.BonusData;
+				scroller.ExtractBonusData();
+				
+				friendDragon.GetComponentInChildren<TextMesh>().text = pData.FacebookName;
+				
+				// Cached your data on SQL server
+				if (pData.FacebookID.Equals(playerData.FacebookID)) {
+					playerDataSaved = pData;
+					
+					if (friendDragon != null) {
+						friendDragon.GetComponentInChildren<TextMesh>().text = "You";
+					}
+				}
+			}
+			else {
+				friendDragon.SetActive(false);
 			}
 		}
 	}
@@ -176,17 +214,13 @@ public class GameManager : MonoBehaviour {
 		// Get player's replay data
 		DragonController controller = dragon.GetComponent<DragonController> ();
 		playerData.JumpData = controller.JumpData;
-		Debug.Log ("Last JumpData = " + playerData.JumpData);
 
 		Scroller scroller = dragon.GetComponent<Scroller> ();
 		playerData.BonusData = scroller.BonusData;
-		Debug.Log ("Last BonusData = " + scroller.BonusData);
 
 		isPlayerDied = true;
 
 		UpdatePlayerDataToDatabase ();
-
-		btnTouchToContinue.SetActive (true);
 	}
 
 	public void OnPlayerLoginFacebook(bool isSuccessful) {
@@ -240,12 +274,6 @@ public class GameManager : MonoBehaviour {
 				playerDataSaved.Score = playerData.Score;
 				playerDataSaved.JumpData = playerData.JumpData;
 				playerDataSaved.BonusData = playerData.BonusData;
-
-				topPlayerDatas.Sort(delegate(PlayerData x, PlayerData y) {
-					if (x.Score == y.Score) return 0;
-					else if (x.Score < y.Score) return 1;
-					return -1;
-				});
 			}
 
 			// Insert/update player data to database.
@@ -260,17 +288,30 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void OnLoadPlayerDatasFinish(bool isSuccess, string returnedString) {
+		bool isReplay = true;
+
 		if (isSuccess) {
 			DeserializePlayerDatas (returnedString);
 
-			CreateFriendDragons();
+			if (friendDragons == null) {
+				isReplay = false;
+				CreateFriendDragons();
+			}
+			else {
+				UpdateFriendDragonsInfo();
+			}
 		}
 
-		Debug.Log ("OnLoadPlayerDatasFinish " + isSuccess);
-		Debug.Log ("returnedString = " + returnedString);
+		btnTouchToContinue.SetActive (isReplay);
 	}
 
 	public void OnUpdatePlayerDataFinish(bool isSuccess) {
+		if (isSuccess) {
+			// Update top player data
+			LoadPlayerDatasFromDatabase ();
+		} else {
+			btnTouchToContinue.SetActive(true);
+		}
 	}
 
 	public void OnUpdatePlayerInfoFinish(bool isSuccess) {
@@ -296,18 +337,10 @@ public class GameManager : MonoBehaviour {
 
 		// Reset friend dragons position
 		foreach (var friendDragon in friendDragons) {
-			friendDragon.transform.Translate(translateVec);
-			friendDragon.GetComponent<FriendDragonController> ().Reset ();
-			friendDragon.GetComponent<FriendScroller> ().Reset ();
-
-			if (playerDataSaved != null) {
-				if (friendDragon.GetComponentInChildren<TextMesh>().text.Equals("You")) {
-					friendDragon.GetComponent<FriendDragonController> ().JumpData = playerDataSaved.JumpData;
-					friendDragon.GetComponent<FriendDragonController> ().ExtractJumpData();
-
-					friendDragon.GetComponent<FriendScroller> ().BonusData = playerDataSaved.BonusData;
-					friendDragon.GetComponent<FriendScroller> ().ExtractBonusData();
-				}
+			if (friendDragon.activeSelf) {
+				friendDragon.transform.Translate(translateVec);
+				friendDragon.GetComponent<FriendDragonController> ().Reset ();
+				friendDragon.GetComponent<FriendScroller> ().Reset ();
 			}
 		}
 
@@ -331,34 +364,33 @@ public class GameManager : MonoBehaviour {
 	private bool DeserializePlayerDatas(string returnedText) {
 		char[] rowDelimiters = new char[] { '\n' };
 		string[] rows = returnedText.Split (rowDelimiters, System.StringSplitOptions.RemoveEmptyEntries);
-		
+
 		if (rows != null && rows.Length > 0) {
+			topPlayerDatas = new PlayerData[rows.Length];
+
 			char[] colDelimiters = new char[] { ';' };
 			
 			for (int i = 0; i < rows.Length; i++) {
 				string[] cols = rows[i].Split(colDelimiters, System.StringSplitOptions.RemoveEmptyEntries);
+
+				PlayerData pData = topPlayerDatas[i] = new PlayerData();
 				
-				if (cols != null && cols.Length > 5) {
-					PlayerData pData = new PlayerData();
-					
-					pData.FacebookID = cols[0];
-					pData.FacebookName = cols[1];
-					pData.FacebookFriends = cols[2];
-					pData.Score = int.Parse(cols[3]);
-					pData.JumpData = cols[4];
-					pData.BonusData = cols[5];
-					
-					pData.LogAllInfos();
-					
-					// add player data to managed list
-					topPlayerDatas.Add(pData);
+				pData.FacebookID = cols[0];
+				pData.FacebookName = cols[1];
+				pData.FacebookFriends = cols[2];
+				pData.Score = int.Parse(cols[3]);
+				pData.JumpData = cols[4];
+				pData.BonusData = cols[5];
+
+				if (pData.FacebookID.Equals(playerData.FacebookID)) {
+					playerDataSaved = pData;
 				}
+				
+				pData.LogAllInfos();
 			}
 		} else {
 			return false;
 		}
-		
-		Debug.Log ("DeserializePlayerDatas: topPlayers.Count = " + topPlayerDatas.Count);
 		
 		return true;
 	}

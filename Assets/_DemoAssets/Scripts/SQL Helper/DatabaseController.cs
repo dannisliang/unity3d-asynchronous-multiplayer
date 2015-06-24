@@ -90,7 +90,6 @@ public class DatabaseController : MonoBehaviour {
 	IEnumerator LoadPlayerDataRoutine(string playerFacebookID)
 	{
 		string requestURL = selectQueryURL + "fb_id=" + WWW.EscapeURL(playerFacebookID);
-		Debug.Log("requestURL = " + requestURL);
 
 		WWW webRequest = new WWW(requestURL);
 		
@@ -102,9 +101,6 @@ public class DatabaseController : MonoBehaviour {
 	IEnumerator DeletePlayerDataRoutine(string playerFacebookID)
 	{
 		string requestURL = deleteQueryURL + "new_fb_id=" + WWW.EscapeURL(playerFacebookID);
-		
-		Debug.Log("requestURL = " + requestURL);
-		
 		
 		WWW webRequest = new WWW(requestURL);
 		

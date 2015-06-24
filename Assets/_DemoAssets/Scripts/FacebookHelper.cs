@@ -67,9 +67,9 @@ public class FacebookHelper : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		btnLogin.enabled = true;
-		btnInviteFriends.enabled = false;
-		btnPlay.enabled = false;
+		if (!FB.IsLoggedIn) {
+			EnableLoginButton ();
+		}
 	}
 	
 	// Update is called once per frame
@@ -81,32 +81,33 @@ public class FacebookHelper : MonoBehaviour {
 		if (!FB.IsLoggedIn) {
 			FB.Login ("user_friends, public_profile", LoginCallBack);
 		} else {
-			btnLogin.enabled = false;
-			btnLogin.GetComponent<CanvasRenderer> ().SetAlpha (0.0f);
-			btnInviteFriends.enabled = true;
-			btnPlay.enabled = true;
-
-			btnLogin.GetComponent<Text>().text = "Log Out Facebook";
-
+			DisableLoginButton();
 		}
 	}
 	
 	public void OnBtnInviteFriends() {
-		FB.AppRequest(message: "Test Unity Asynchronous Multiplayer",
-		              title: "Race with me!");
-	}
-
-	public void OnBtnHighscore() {
+		if (FB.IsLoggedIn) {
+			FB.AppRequest (message: "Test Unity Asynchronous Multiplayer",
+			              title: "Race with me!");
+		}
 	}
 
 	public void OnBtnPlay() {
-		// Hide Facebook panel
-		facebookPanel.SetActive (false);
+		if (IsLoggedInSuccessful) {
+			// Hide Facebook panel
+			facebookPanel.SetActive (false);
+		}
 	}
 
 	public void OnGameOver() {
 		// Show Facebook panel
 		facebookPanel.SetActive (true);
+
+		if (FB.IsLoggedIn) {
+			DisableLoginButton ();
+		} else {
+			EnableLoginButton();
+		}
 	}
 
 	void DealWithFacebookLoggedIn() {
@@ -121,8 +122,7 @@ public class FacebookHelper : MonoBehaviour {
 			Debug.Log("FB logged in");
 			DealWithFacebookLoggedIn();
 
-			btnLogin.enabled = false;
-			btnLogin.GetComponent<CanvasRenderer> ().SetAlpha (0.0f);
+			DisableLoginButton();
 		}
 	}
 	
@@ -139,8 +139,7 @@ public class FacebookHelper : MonoBehaviour {
 
 			DealWithFacebookLoggedIn();
 
-			btnLogin.enabled = false;
-			btnLogin.GetComponent<CanvasRenderer> ().SetAlpha (0.0f);
+			DisableLoginButton();
 		}
 		else
 		{
@@ -201,13 +200,31 @@ public class FacebookHelper : MonoBehaviour {
 
 		GameManager.Instance.OnPlayerLoginFacebook (isLoggedInSuccessful);
 
+		DisableLoginButton ();
+	}
+	
+	#endregion
+
+	void EnableLoginButton() {
+		btnLogin.enabled = true;
+		btnLogin.GetComponent<CanvasRenderer> ().SetAlpha (1.0f);
+		
+		btnInviteFriends.enabled = false;
+		btnInviteFriends.GetComponent<CanvasRenderer> ().SetAlpha (0.0f);
+		
+		btnPlay.enabled = false;
+		btnPlay.GetComponent<CanvasRenderer> ().SetAlpha (0.0f);
+	}
+
+	void DisableLoginButton() {
 		btnLogin.enabled = false;
 		btnLogin.GetComponent<CanvasRenderer> ().SetAlpha (0.0f);
 
 		btnInviteFriends.enabled = true;
+		btnInviteFriends.GetComponent<CanvasRenderer> ().SetAlpha (1.0f);
+
 		btnPlay.enabled = true;
+		btnPlay.GetComponent<CanvasRenderer> ().SetAlpha (1.0f);
 	}
-	
-	#endregion
 
 }
