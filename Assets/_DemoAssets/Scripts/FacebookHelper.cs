@@ -38,7 +38,6 @@ public class FacebookHelper : MonoBehaviour {
 	public GameObject facebookPanel = null;
 	public Button btnLogin = null;
 	public Button btnInviteFriends = null;
-	public Button btnHighscore = null;
 	public Button btnPlay = null;
 
 	private bool isLoggedInSuccessful = false;
@@ -70,7 +69,6 @@ public class FacebookHelper : MonoBehaviour {
 	void Start () {
 		btnLogin.enabled = true;
 		btnInviteFriends.enabled = false;
-		btnHighscore.enabled = false;
 		btnPlay.enabled = false;
 	}
 	
@@ -84,11 +82,12 @@ public class FacebookHelper : MonoBehaviour {
 			FB.Login ("user_friends, public_profile", LoginCallBack);
 		} else {
 			btnLogin.enabled = false;
+			btnLogin.GetComponent<CanvasRenderer> ().SetAlpha (0.0f);
 			btnInviteFriends.enabled = true;
-			btnHighscore.enabled = true;
 			btnPlay.enabled = true;
 
 			btnLogin.GetComponent<Text>().text = "Log Out Facebook";
+
 		}
 	}
 	
@@ -121,8 +120,9 @@ public class FacebookHelper : MonoBehaviour {
 		if (FB.IsLoggedIn) {
 			Debug.Log("FB logged in");
 			DealWithFacebookLoggedIn();
-			
+
 			btnLogin.enabled = false;
+			btnLogin.GetComponent<CanvasRenderer> ().SetAlpha (0.0f);
 		}
 	}
 	
@@ -140,6 +140,7 @@ public class FacebookHelper : MonoBehaviour {
 			DealWithFacebookLoggedIn();
 
 			btnLogin.enabled = false;
+			btnLogin.GetComponent<CanvasRenderer> ().SetAlpha (0.0f);
 		}
 		else
 		{
@@ -199,15 +200,12 @@ public class FacebookHelper : MonoBehaviour {
 		isLoggedInSuccessful = true;
 
 		GameManager.Instance.OnPlayerLoginFacebook (isLoggedInSuccessful);
-		
-		btnLogin.GetComponentInChildren<Text>().text = "Log Out Facebook";
+
 		btnLogin.enabled = false;
+		btnLogin.GetComponent<CanvasRenderer> ().SetAlpha (0.0f);
+
 		btnInviteFriends.enabled = true;
-		btnHighscore.enabled = true;
 		btnPlay.enabled = true;
-	}
-	
-	private void AppRequestCallback(FBResult result) {
 	}
 	
 	#endregion

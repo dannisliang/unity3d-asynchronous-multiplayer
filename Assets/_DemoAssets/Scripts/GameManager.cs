@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject btnTapToPlay = null;
 	public GameObject btnTouchToContinue = null;
 	public GameObject mainCanvas = null;
+	public GameObject highscoreTable = null;
 
 	/// <summary>
 	/// The dragon.
@@ -31,6 +32,8 @@ public class GameManager : MonoBehaviour {
 	/// The is player died.
 	/// </summary>
 	private bool isPlayerDied = false;
+	private bool isLoading = false;
+	private bool isPositionChanged = false;
 
 	public PlayerData GetPlayerData {
 		get {
@@ -79,30 +82,38 @@ public class GameManager : MonoBehaviour {
 
 	void CreateFriendDragons() {
 		Debug.Log ("CreateFriendDragons: topPlayerDatas.Count = " + topPlayerDatas.Count);
-		foreach (var pData in topPlayerDatas) {
-			//Debug.Log (pData.FacebookID + "\t" + pData.FacebookName + "\t" + pData.FacebookFriends + "\t" + pData.Score + "\t" + pData.JumpData + "\t" + pData.BonusData);
+		PlayerData[] playerDatas = topPlayerDatas.ToArray ();
 
-			GameObject friendDragon = (GameObject) Instantiate(friendDragonPrefab, Vector3.zero, Quaternion.identity);
+		for (int i = 0; i < playerDatas.Length; i++) {
+			PlayerData pData = playerDatas[i];
+			GameObject friendDragon = null;
 
-			// Set data for controller component
-			FriendDragonController controller = friendDragon.GetComponent<FriendDragonController> ();
-			controller.JumpData = pData.JumpData;
-			controller.ExtractJumpData();
+			if (i < 5) {
+				friendDragon = (GameObject) Instantiate(friendDragonPrefab, Vector3.zero, Quaternion.identity);
 
-			// Set data for scroller component
-			FriendScroller scroller = friendDragon.GetComponent<FriendScroller> ();
-			scroller.BonusData = pData.BonusData;
-			scroller.ExtractBonusData();
+				// Set data for controller component
+				FriendDragonController controller = friendDragon.GetComponent<FriendDragonController> ();
+				controller.JumpData = pData.JumpData;
+				controller.ExtractJumpData();
+
+				// Set data for scroller component
+				FriendScroller scroller = friendDragon.GetComponent<FriendScroller> ();
+				scroller.BonusData = pData.BonusData;
+				scroller.ExtractBonusData();
+					
+				friendDragon.GetComponentInChildren<TextMesh>().text = pData.FacebookName;
+				
+				friendDragons.Add (friendDragon);
+			}
 			
 			// Cached your data on SQL server
 			if (pData.FacebookID.Equals(playerData.FacebookID)) {
 				playerDataSaved = pData;
-				friendDragon.GetComponentInChildren<TextMesh>().text = "You";
-			}
-			else
-				friendDragon.GetComponentInChildren<TextMesh>().text = pData.FacebookName;
 
-			friendDragons.Add (friendDragon);
+				if (friendDragon != null) {
+					friendDragon.GetComponentInChildren<TextMesh>().text = "You";
+				}
+			}
 		}
 	}
 
@@ -142,6 +153,8 @@ public class GameManager : MonoBehaviour {
 		
 		// Reset game
 		ResetGameScene ();
+		
+		highscoreTable.GetComponent<HighscoreTableManager> ().CreateTable (topPlayerDatas);
 	}
 
 	/// <summary>
@@ -172,6 +185,8 @@ public class GameManager : MonoBehaviour {
 		isPlayerDied = true;
 
 		UpdatePlayerDataToDatabase ();
+
+		btnTouchToContinue.SetActive (true);
 	}
 
 	public void OnPlayerLoginFacebook(bool isSuccessful) {
@@ -225,6 +240,12 @@ public class GameManager : MonoBehaviour {
 				playerDataSaved.Score = playerData.Score;
 				playerDataSaved.JumpData = playerData.JumpData;
 				playerDataSaved.BonusData = playerData.BonusData;
+
+				topPlayerDatas.Sort(delegate(PlayerData x, PlayerData y) {
+					if (x.Score == y.Score) return 0;
+					else if (x.Score < y.Score) return 1;
+					return -1;
+				});
 			}
 
 			// Insert/update player data to database.
@@ -250,7 +271,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void OnUpdatePlayerDataFinish(bool isSuccess) {
-		btnTouchToContinue.SetActive (true);
 	}
 
 	public void OnUpdatePlayerInfoFinish(bool isSuccess) {
