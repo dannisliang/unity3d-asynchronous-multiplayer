@@ -1,0 +1,471 @@
+fileFormatVersion: 2
+guid: c4bcdf61156ea4d4c93b8cab28dc4397
+timeCreated: 1433930372
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: DragonGeoSpiked_High
+    100002: Head
+    100004: Head_End
+    100006: Hips
+    100008: Jaw
+    100010: Jaw_End
+    100012: LeftArm
+    100014: LeftFoot
+    100016: LeftFootIndex1
+    100018: LeftFootIndex2
+    100020: LeftFootIndex3
+    100022: LeftForeArm
+    100024: LeftHand
+    100026: LeftHandIndex1
+    100028: LeftHandIndex2
+    100030: LeftHandIndex3
+    100032: LeftLeg
+    100034: LeftShoulder
+    100036: LeftThumb1
+    100038: LeftThumb2
+    100040: LeftThumb3
+    100042: LeftToeBase
+    100044: LeftUpLeg
+    100046: LeftWing1
+    100048: LeftWing2
+    100050: LeftWing2ndFinger1
+    100052: LeftWing2ndFinger2
+    100054: LeftWing2ndFinger3
+    100056: LeftWing3
+    100058: LeftWing3rdFinger1
+    100060: LeftWing3rdFinger2
+    100062: LeftWing3rdFinger3
+    100064: LeftWing4
+    100066: LeftWing_End
+    100068: Neck
+    100070: Neck1
+    100072: Neck2
+    100074: Neck3
+    100076: Neck4
+    100078: Neck5
+    100080: Neck6
+    100082: //RootNode
+    100084: RightArm
+    100086: RightFoot
+    100088: RightFootIndex1
+    100090: RightFootIndex2
+    100092: RightFootIndex3
+    100094: RightForeArm
+    100096: RightHand
+    100098: RightHandIndex1
+    100100: RightHandIndex2
+    100102: RightHandIndex3
+    100104: RightLeg
+    100106: RightShoulder
+    100108: RightThumb1
+    100110: RightThumb2
+    100112: RightThumb3
+    100114: RightToeBase
+    100116: RightUpLeg
+    100118: RightWing1
+    100120: RightWing2
+    100122: RightWing2ndFinger1
+    100124: RightWing2ndFinger2
+    100126: RightWing2ndFinger3
+    100128: RightWing3
+    100130: RightWing3rdFinger1
+    100132: RightWing3rdFinger2
+    100134: RightWing3rdFinger3
+    100136: RightWing4
+    100138: RightWing_End
+    100140: Spine
+    100142: Spine1
+    100144: Spine2
+    100146: Spine3
+    100148: Spine4
+    100150: Spine5
+    100152: Spine6
+    100154: Spine7
+    100156: Tail
+    100158: Tail1
+    100160: Tail2
+    100162: Tail3
+    100164: Tail4
+    100166: Tail5
+    100168: Tail6
+    100170: Tail7
+    100172: Tail8
+    100174: Tail_End
+    100176: Tongue
+    100178: Tongue1
+    100180: Tongue2
+    100182: Tongue3
+    100184: Tongue4
+    100186: Tongue_End
+    400000: DragonGeoSpiked_High
+    400002: Head
+    400004: Head_End
+    400006: Hips
+    400008: Jaw
+    400010: Jaw_End
+    400012: LeftArm
+    400014: LeftFoot
+    400016: LeftFootIndex1
+    400018: LeftFootIndex2
+    400020: LeftFootIndex3
+    400022: LeftForeArm
+    400024: LeftHand
+    400026: LeftHandIndex1
+    400028: LeftHandIndex2
+    400030: LeftHandIndex3
+    400032: LeftLeg
+    400034: LeftShoulder
+    400036: LeftThumb1
+    400038: LeftThumb2
+    400040: LeftThumb3
+    400042: LeftToeBase
+    400044: LeftUpLeg
+    400046: LeftWing1
+    400048: LeftWing2
+    400050: LeftWing2ndFinger1
+    400052: LeftWing2ndFinger2
+    400054: LeftWing2ndFinger3
+    400056: LeftWing3
+    400058: LeftWing3rdFinger1
+    400060: LeftWing3rdFinger2
+    400062: LeftWing3rdFinger3
+    400064: LeftWing4
+    400066: LeftWing_End
+    400068: Neck
+    400070: Neck1
+    400072: Neck2
+    400074: Neck3
+    400076: Neck4
+    400078: Neck5
+    400080: Neck6
+    400082: //RootNode
+    400084: RightArm
+    400086: RightFoot
+    400088: RightFootIndex1
+    400090: RightFootIndex2
+    400092: RightFootIndex3
+    400094: RightForeArm
+    400096: RightHand
+    400098: RightHandIndex1
+    400100: RightHandIndex2
+    400102: RightHandIndex3
+    400104: RightLeg
+    400106: RightShoulder
+    400108: RightThumb1
+    400110: RightThumb2
+    400112: RightThumb3
+    400114: RightToeBase
+    400116: RightUpLeg
+    400118: RightWing1
+    400120: RightWing2
+    400122: RightWing2ndFinger1
+    400124: RightWing2ndFinger2
+    400126: RightWing2ndFinger3
+    400128: RightWing3
+    400130: RightWing3rdFinger1
+    400132: RightWing3rdFinger2
+    400134: RightWing3rdFinger3
+    400136: RightWing4
+    400138: RightWing_End
+    400140: Spine
+    400142: Spine1
+    400144: Spine2
+    400146: Spine3
+    400148: Spine4
+    400150: Spine5
+    400152: Spine6
+    400154: Spine7
+    400156: Tail
+    400158: Tail1
+    400160: Tail2
+    400162: Tail3
+    400164: Tail4
+    400166: Tail5
+    400168: Tail6
+    400170: Tail7
+    400172: Tail8
+    400174: Tail_End
+    400176: Tongue
+    400178: Tongue1
+    400180: Tongue2
+    400182: Tongue3
+    400184: Tongue4
+    400186: Tongue_End
+    4300000: DragonGeoSpiked_High
+    7400000: flying
+    9500000: //RootNode
+    13700000: DragonGeoSpiked_High
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: flying
+      takeName: mixamo.com
+      firstFrame: 0
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: DragonGeoSpiked_High
+        weight: 1
+      - path: Hips
+        weight: 1
+      - path: Hips/LeftUpLeg
+        weight: 1
+      - path: Hips/LeftUpLeg/LeftLeg
+        weight: 1
+      - path: Hips/LeftUpLeg/LeftLeg/LeftFoot
+        weight: 1
+      - path: Hips/LeftUpLeg/LeftLeg/LeftFoot/LeftToeBase
+        weight: 1
+      - path: Hips/LeftUpLeg/LeftLeg/LeftFoot/LeftToeBase/LeftFootIndex1
+        weight: 1
+      - path: Hips/LeftUpLeg/LeftLeg/LeftFoot/LeftToeBase/LeftFootIndex1/LeftFootIndex2
+        weight: 1
+      - path: Hips/LeftUpLeg/LeftLeg/LeftFoot/LeftToeBase/LeftFootIndex1/LeftFootIndex2/LeftFootIndex3
+        weight: 1
+      - path: Hips/RightUpLeg
+        weight: 1
+      - path: Hips/RightUpLeg/RightLeg
+        weight: 1
+      - path: Hips/RightUpLeg/RightLeg/RightFoot
+        weight: 1
+      - path: Hips/RightUpLeg/RightLeg/RightFoot/RightToeBase
+        weight: 1
+      - path: Hips/RightUpLeg/RightLeg/RightFoot/RightToeBase/RightFootIndex1
+        weight: 1
+      - path: Hips/RightUpLeg/RightLeg/RightFoot/RightToeBase/RightFootIndex1/RightFootIndex2
+        weight: 1
+      - path: Hips/RightUpLeg/RightLeg/RightFoot/RightToeBase/RightFootIndex1/RightFootIndex2/RightFootIndex3
+        weight: 1
+      - path: Hips/Spine
+        weight: 1
+      - path: Hips/Spine/Spine1
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftShoulder
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftShoulder/LeftArm
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftShoulder/LeftArm/LeftForeArm
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftShoulder/LeftArm/LeftForeArm/LeftHand
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftHandIndex1
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftHandIndex1/LeftHandIndex2
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftHandIndex1/LeftHandIndex2/LeftHandIndex3
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftThumb1
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftThumb1/LeftThumb2
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftThumb1/LeftThumb2/LeftThumb3
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftWing1
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftWing1/LeftWing2
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftWing1/LeftWing2/LeftWing3
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftWing1/LeftWing2/LeftWing3/LeftWing2ndFinger1
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftWing1/LeftWing2/LeftWing3/LeftWing2ndFinger1/LeftWing2ndFinger2
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftWing1/LeftWing2/LeftWing3/LeftWing2ndFinger1/LeftWing2ndFinger2/LeftWing2ndFinger3
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftWing1/LeftWing2/LeftWing3/LeftWing3rdFinger1
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftWing1/LeftWing2/LeftWing3/LeftWing3rdFinger1/LeftWing3rdFinger2
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftWing1/LeftWing2/LeftWing3/LeftWing3rdFinger1/LeftWing3rdFinger2/LeftWing3rdFinger3
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftWing1/LeftWing2/LeftWing3/LeftWing4
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/LeftWing1/LeftWing2/LeftWing3/LeftWing4/LeftWing_End
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2/Neck3
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2/Neck3/Neck4
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2/Neck3/Neck4/Neck5
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2/Neck3/Neck4/Neck5/Neck6
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2/Neck3/Neck4/Neck5/Neck6/Head
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2/Neck3/Neck4/Neck5/Neck6/Head/Head_End
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2/Neck3/Neck4/Neck5/Neck6/Head/Jaw
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2/Neck3/Neck4/Neck5/Neck6/Head/Jaw/Jaw_End
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2/Neck3/Neck4/Neck5/Neck6/Head/Jaw/Tongue
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2/Neck3/Neck4/Neck5/Neck6/Head/Jaw/Tongue/Tongue1
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2/Neck3/Neck4/Neck5/Neck6/Head/Jaw/Tongue/Tongue1/Tongue2
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2/Neck3/Neck4/Neck5/Neck6/Head/Jaw/Tongue/Tongue1/Tongue2/Tongue3
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2/Neck3/Neck4/Neck5/Neck6/Head/Jaw/Tongue/Tongue1/Tongue2/Tongue3/Tongue4
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/Neck/Neck1/Neck2/Neck3/Neck4/Neck5/Neck6/Head/Jaw/Tongue/Tongue1/Tongue2/Tongue3/Tongue4/Tongue_End
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightShoulder
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightShoulder/RightArm
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightShoulder/RightArm/RightForeArm
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightShoulder/RightArm/RightForeArm/RightHand
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightShoulder/RightArm/RightForeArm/RightHand/RightHandIndex1
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightShoulder/RightArm/RightForeArm/RightHand/RightHandIndex1/RightHandIndex2
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightShoulder/RightArm/RightForeArm/RightHand/RightHandIndex1/RightHandIndex2/RightHandIndex3
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightShoulder/RightArm/RightForeArm/RightHand/RightThumb1
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightShoulder/RightArm/RightForeArm/RightHand/RightThumb1/RightThumb2
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightShoulder/RightArm/RightForeArm/RightHand/RightThumb1/RightThumb2/RightThumb3
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightWing1
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightWing1/RightWing2
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightWing1/RightWing2/RightWing3
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightWing1/RightWing2/RightWing3/RightWing2ndFinger1
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightWing1/RightWing2/RightWing3/RightWing2ndFinger1/RightWing2ndFinger2
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightWing1/RightWing2/RightWing3/RightWing2ndFinger1/RightWing2ndFinger2/RightWing2ndFinger3
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightWing1/RightWing2/RightWing3/RightWing3rdFinger1
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightWing1/RightWing2/RightWing3/RightWing3rdFinger1/RightWing3rdFinger2
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightWing1/RightWing2/RightWing3/RightWing3rdFinger1/RightWing3rdFinger2/RightWing3rdFinger3
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightWing1/RightWing2/RightWing3/RightWing4
+        weight: 1
+      - path: Hips/Spine/Spine1/Spine2/Spine3/Spine4/Spine5/Spine6/Spine7/RightWing1/RightWing2/RightWing3/RightWing4/RightWing_End
+        weight: 1
+      - path: Hips/Tail
+        weight: 1
+      - path: Hips/Tail/Tail1
+        weight: 1
+      - path: Hips/Tail/Tail1/Tail2
+        weight: 1
+      - path: Hips/Tail/Tail1/Tail2/Tail3
+        weight: 1
+      - path: Hips/Tail/Tail1/Tail2/Tail3/Tail4
+        weight: 1
+      - path: Hips/Tail/Tail1/Tail2/Tail3/Tail4/Tail5
+        weight: 1
+      - path: Hips/Tail/Tail1/Tail2/Tail3/Tail4/Tail5/Tail6
+        weight: 1
+      - path: Hips/Tail/Tail1/Tail2/Tail3/Tail4/Tail5/Tail6/Tail7
+        weight: 1
+      - path: Hips/Tail/Tail1/Tail2/Tail3/Tail4/Tail5/Tail6/Tail7/Tail8
+        weight: 1
+      - path: Hips/Tail/Tail1/Tail2/Tail3/Tail4/Tail5/Tail6/Tail7/Tail8/Tail_End
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
