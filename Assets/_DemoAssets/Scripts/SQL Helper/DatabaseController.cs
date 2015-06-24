@@ -9,8 +9,6 @@ public class DatabaseController : MonoBehaviour {
 	public string updateQueryURL = "http://54.172.187.82/unitytest/update_player_info.php?";
 	public string deleteQueryURL = "http://54.172.187.82/unitytest/delete_player_data.php?";
 	public string selectQueryURL = "http://54.172.187.82/unitytest/load_player_data.php?";
-
-	private bool isLoading = false;
 	
 	private static DatabaseController _instance = null;
 	

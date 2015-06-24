@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour {
 	/// The is player died.
 	/// </summary>
 	private bool isPlayerDied = false;
-	private bool isWaiting = false;
 
 	public PlayerData GetPlayerData {
 		get {
@@ -203,14 +202,10 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	/// <returns><c>true</c>, if player data from database was loaded, <c>false</c> otherwise.</returns>
 	public void LoadPlayerDatasFromDatabase() {
-		isWaiting = true;
-
 		DatabaseController.Instance.LoadPlayerData (playerData.FacebookID);
 	}
 
 	public void UpdatePlayerFacebookInfoToDatabase() {
-		isWaiting = true;
-
 		DatabaseController.Instance.UpdatePlayerInfo (playerData);
 	}
 	
@@ -219,8 +214,6 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	/// <returns><c>true</c>, if player data to database was updated, <c>false</c> otherwise.</returns>
 	public void UpdatePlayerDataToDatabase() {
-		isWaiting = true;
-
 		// Check if player has not logged into Facebook
 		if (!FacebookHelper.Instance.IsLoggedInSuccessful) {
 			OnUpdatePlayerDataFinish(false);
@@ -242,7 +235,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void DeletePlayerDatasFromDatabase() {
-		isWaiting = true;
 		DatabaseController.Instance.DeletePlayerData (playerData.FacebookID);
 	}
 
@@ -253,27 +245,20 @@ public class GameManager : MonoBehaviour {
 			CreateFriendDragons();
 		}
 
-		isWaiting = false;
-
 		Debug.Log ("OnLoadPlayerDatasFinish " + isSuccess);
 		Debug.Log ("returnedString = " + returnedString);
 	}
 
 	public void OnUpdatePlayerDataFinish(bool isSuccess) {
-		isWaiting = false;
-
 		btnTouchToContinue.SetActive (true);
 	}
 
 	public void OnUpdatePlayerInfoFinish(bool isSuccess) {
-		isWaiting = false;
-		
 		// Load player's datas from database
 		LoadPlayerDatasFromDatabase ();
 	}
 
 	public void OnDeletePlayerDataFinish(bool isSuccess) {
-		isWaiting = false;
 	}
 
 	private void ResetGameScene() {

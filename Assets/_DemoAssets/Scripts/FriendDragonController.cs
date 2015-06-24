@@ -25,7 +25,7 @@ public class FriendDragonController : MonoBehaviour {
 	}
 	
 	void Awake() {
-		dragonRigidbody = dragonModel.GetComponent<Rigidbody> ();
+		dragonRigidbody = dragonModel.GetComponentInChildren<Rigidbody> ();
 		ExtractJumpData ();
 	}
 	
@@ -53,6 +53,7 @@ public class FriendDragonController : MonoBehaviour {
 	public void OnTapToPlay() {
 		enabled = true;
 		dragonRigidbody.useGravity = true;
+		dragonRigidbody.isKinematic = false;
 	}
 	
 	/// <summary>
@@ -63,6 +64,7 @@ public class FriendDragonController : MonoBehaviour {
 		currentJumpTimestampIndex = 0;
 		enabled = false;
 		dragonRigidbody.useGravity = false;
+		dragonRigidbody.isKinematic = false;
 		dragonRigidbody.velocity = Vector3.zero;
 		dragonModel.transform.position = new Vector3 (-2.5f, -0.25f, 0f);
 	}

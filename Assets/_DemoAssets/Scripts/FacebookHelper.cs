@@ -37,6 +37,7 @@ public class FacebookHelper : MonoBehaviour {
 
 	public GameObject facebookPanel = null;
 	public Button btnLogin = null;
+	public Button btnInviteFriends = null;
 	public Button btnHighscore = null;
 	public Button btnPlay = null;
 
@@ -59,11 +60,7 @@ public class FacebookHelper : MonoBehaviour {
 		if (userInfo == null) {
 			userInfo = new FacebookUserInfo ();
 		}
-
-		btnLogin.enabled = true;
-		btnHighscore.enabled = false;
-		btnPlay.enabled = false;
-
+		
 		if (!FB.IsInitialized) {
 			FB.Init (SetInit, OnHideUnity);
 		}
@@ -71,9 +68,10 @@ public class FacebookHelper : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		if (FB.IsLoggedIn) {
-			DealWithFacebookLoggedIn ();
-		}
+		btnLogin.enabled = true;
+		btnInviteFriends.enabled = false;
+		btnHighscore.enabled = false;
+		btnPlay.enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -86,11 +84,17 @@ public class FacebookHelper : MonoBehaviour {
 			FB.Login ("user_friends, public_profile", LoginCallBack);
 		} else {
 			btnLogin.enabled = false;
+			btnInviteFriends.enabled = true;
 			btnHighscore.enabled = true;
 			btnPlay.enabled = true;
 
 			btnLogin.GetComponent<Text>().text = "Log Out Facebook";
 		}
+	}
+	
+	public void OnBtnInviteFriends() {
+		FB.AppRequest(message: "Test Unity Asynchronous Multiplayer",
+		              title: "Race with me!");
 	}
 
 	public void OnBtnHighscore() {
@@ -116,6 +120,9 @@ public class FacebookHelper : MonoBehaviour {
 	void SetInit() {
 		if (FB.IsLoggedIn) {
 			Debug.Log("FB logged in");
+			DealWithFacebookLoggedIn();
+			
+			btnLogin.enabled = false;
 		}
 	}
 	
@@ -193,10 +200,14 @@ public class FacebookHelper : MonoBehaviour {
 
 		GameManager.Instance.OnPlayerLoginFacebook (isLoggedInSuccessful);
 		
+		btnLogin.GetComponentInChildren<Text>().text = "Log Out Facebook";
 		btnLogin.enabled = false;
+		btnInviteFriends.enabled = true;
 		btnHighscore.enabled = true;
 		btnPlay.enabled = true;
-		btnLogin.GetComponentInChildren<Text>().text = "Log Out Facebook";
+	}
+	
+	private void AppRequestCallback(FBResult result) {
 	}
 	
 	#endregion
