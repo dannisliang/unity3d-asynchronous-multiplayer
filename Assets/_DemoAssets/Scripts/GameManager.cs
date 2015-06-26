@@ -291,10 +291,9 @@ public class GameManager : MonoBehaviour {
 
 	public void OnLoadPlayerDatasFinish(bool isSuccess, string returnedString) {
 		bool isReplay = true;
+		bool isSerializeDataSuccess = isSuccess && DeserializePlayerDatas (returnedString);
 
-		if (isSuccess) {
-			DeserializePlayerDatas (returnedString);
-
+		if (isSerializeDataSuccess) {
 			if (friendDragons == null) {
 				isReplay = false;
 				CreateFriendDragons();
@@ -304,6 +303,8 @@ public class GameManager : MonoBehaviour {
 				UpdateFriendDragonsInfo();
 			}
 		}
+		else
+			isReplay = false;
 
 		btnTouchToContinue.SetActive (isReplay);
 	}
@@ -318,8 +319,13 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void OnUpdatePlayerInfoFinish(bool isSuccess) {
-		// Load player's datas from database
-		LoadPlayerDatasFromDatabase ();
+		if (isSuccess) {
+			// Load player's datas from database
+			LoadPlayerDatasFromDatabase ();
+		} else {
+			btnTapToPlay.SetActive (true);
+			btnTouchToContinue.SetActive (false);
+		}
 	}
 
 	public void OnDeletePlayerDataFinish(bool isSuccess) {
@@ -371,6 +377,9 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	private bool DeserializePlayerDatas(string returnedText) {
+		if (returnedText.Length <= 0)
+			return false;
+
 		char[] rowDelimiters = new char[] { '\n' };
 		string[] rows = returnedText.Split (rowDelimiters, System.StringSplitOptions.RemoveEmptyEntries);
 
