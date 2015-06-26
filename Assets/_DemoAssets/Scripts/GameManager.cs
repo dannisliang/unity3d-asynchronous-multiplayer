@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 	
-	public readonly int MaxFriendDragon = 6;
+	public readonly int MaxFriendDragon = 4;
 
 	/// <summary>
 	/// The dragon prefab.
@@ -63,12 +63,12 @@ public class GameManager : MonoBehaviour {
 		if (playerData == null) {
 			playerData = new PlayerData ();
 		}
-
-		btnTouchToContinue.SetActive (false);
 	}
 
 	// Use this for initialization
 	void Start () {
+		btnTouchToContinue.SetActive (false);
+		btnTapToPlay.SetActive (false);
 	}
 	
 	// Update is called once per frame
@@ -170,15 +170,17 @@ public class GameManager : MonoBehaviour {
 	/// Raises the tap to play event.
 	/// </summary>
 	public void OnTapToPlay() {
+		if (friendDragons != null) {
+			foreach (var friendDragon in friendDragons) {
+				friendDragon.GetComponent<FriendScroller> ().OnTapToPlay ();
+				friendDragon.GetComponent<FriendDragonController> ().OnTapToPlay ();
+			}
+		}
+
 		// FIXME weak code
 		if (dragon != null) {
 			dragon.GetComponent<Scroller> ().OnTapToPlay ();
 			dragon.GetComponent<DragonController> ().OnTapToPlay ();
-		}
-
-		foreach (var friendDragon in friendDragons) {
-			friendDragon.GetComponent<FriendScroller> ().OnTapToPlay ();
-			friendDragon.GetComponent<FriendDragonController> ().OnTapToPlay ();
 		}
 	}
 
@@ -265,7 +267,7 @@ public class GameManager : MonoBehaviour {
 	public void UpdatePlayerDataToDatabase() {
 		// Check if player has not logged into Facebook
 		if (!FacebookHelper.Instance.IsLoggedInSuccessful) {
-			OnUpdatePlayerDataFinish(false);
+			btnTouchToContinue.SetActive(true);
 			return;
 		}
 		
@@ -279,7 +281,7 @@ public class GameManager : MonoBehaviour {
 			// Insert/update player data to database.
 			DatabaseController.Instance.InsertPlayerData (playerData);
 		} else {
-			OnUpdatePlayerDataFinish(false);
+			btnTouchToContinue.SetActive(true);
 		}
 	}
 
@@ -296,6 +298,7 @@ public class GameManager : MonoBehaviour {
 			if (friendDragons == null) {
 				isReplay = false;
 				CreateFriendDragons();
+				btnTapToPlay.SetActive(true);
 			}
 			else {
 				UpdateFriendDragonsInfo();
@@ -336,26 +339,32 @@ public class GameManager : MonoBehaviour {
 		playerData.BonusData = "";
 
 		// Reset friend dragons position
-		foreach (var friendDragon in friendDragons) {
-			if (friendDragon.activeSelf) {
-				friendDragon.transform.Translate(translateVec);
-				friendDragon.GetComponent<FriendDragonController> ().Reset ();
-				friendDragon.GetComponent<FriendScroller> ().Reset ();
+		if (friendDragons != null) {
+			foreach (var friendDragon in friendDragons) {
+				if (friendDragon.activeSelf) {
+					friendDragon.transform.Translate (translateVec);
+					friendDragon.GetComponent<FriendDragonController> ().Reset ();
+					friendDragon.GetComponent<FriendScroller> ().Reset ();
+				}
 			}
 		}
 
 		// Reset green balls
 		GameObject[] greenBalls = GameObject.FindGameObjectsWithTag ("GreenBall");
-		foreach (var greenBall in greenBalls) {
-			greenBall.GetComponentInChildren<MeshRenderer>().enabled = true;
-			greenBall.GetComponentInChildren<Collider>().enabled = true;
+		if (greenBalls != null) {
+			foreach (var greenBall in greenBalls) {
+				greenBall.GetComponentInChildren<MeshRenderer> ().enabled = true;
+				greenBall.GetComponentInChildren<Collider> ().enabled = true;
+			}
 		}
 
 		// Reset bonus balls
 		GameObject[] bonusBalls = GameObject.FindGameObjectsWithTag ("BonusBall");
-		foreach (var bonusBall in bonusBalls) {
-			bonusBall.GetComponentInChildren<MeshRenderer>().enabled = true;
-			bonusBall.GetComponentInChildren<Collider>().enabled = true;
+		if (bonusBalls != null) {
+			foreach (var bonusBall in bonusBalls) {
+				bonusBall.GetComponentInChildren<MeshRenderer> ().enabled = true;
+				bonusBall.GetComponentInChildren<Collider> ().enabled = true;
+			}
 		}
 
 		btnTapToPlay.SetActive (true);

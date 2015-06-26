@@ -83,5 +83,9 @@ public class FriendDragonController : MonoBehaviour {
 			}
 		}
 	}
+
+	public bool IsEndOfPath() {
+		return (jumpTimestamps != null && currentJumpTimestampIndex >= jumpTimestamps.Length);
+	}
 }
 

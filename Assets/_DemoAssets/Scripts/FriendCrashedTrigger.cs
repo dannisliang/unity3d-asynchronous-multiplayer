@@ -18,8 +18,14 @@ public class FriendCrashedTrigger : MonoBehaviour {
 	/// </summary>
 	/// <param name="other">Other.</param>
 	void OnTriggerEnter(Collider other) {
-		GetComponentInParent<Rigidbody> ().isKinematic = true;
-		GetComponentInParent<FriendScroller> ().enabled = false;
-		GetComponentInParent<FriendDragonController> ().enabled = false;
+		FriendDragonController controller = GetComponentInParent<FriendDragonController> ();
+
+		if (controller.IsEndOfPath ()) {
+			GetComponentInParent<Rigidbody> ().isKinematic = true;
+			GetComponentInParent<FriendScroller> ().enabled = false;
+			controller.enabled = false;
+		} else {
+			Debug.Log ("Not end of path");
+		}
 	}
 }

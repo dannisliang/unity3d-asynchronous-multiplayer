@@ -220,8 +220,14 @@ public class FacebookHelper : MonoBehaviour {
 		btnLogin.enabled = false;
 		btnLogin.GetComponent<CanvasRenderer> ().SetAlpha (0.0f);
 
-		btnInviteFriends.enabled = true;
-		btnInviteFriends.GetComponent<CanvasRenderer> ().SetAlpha (1.0f);
+		if (!(Application.platform == RuntimePlatform.OSXWebPlayer
+			|| Application.platform == RuntimePlatform.WindowsWebPlayer)) {
+			btnInviteFriends.enabled = true;
+			btnInviteFriends.GetComponent<CanvasRenderer> ().SetAlpha (1.0f);
+		} else {
+			btnInviteFriends.enabled = false;
+			btnInviteFriends.GetComponent<CanvasRenderer> ().SetAlpha (0.0f);
+		}
 
 		btnPlay.enabled = true;
 		btnPlay.GetComponent<CanvasRenderer> ().SetAlpha (1.0f);
